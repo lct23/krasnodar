@@ -1,8 +1,21 @@
+
+CREATE TABLE department (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+
 CREATE TABLE "user" (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     nickname TEXT NOT NULL,
     email VARCHAR(255),
+    name TEXT NOT NULL,
+    avatar_url TEXT,
     roles text[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+    department_id BIGINT NOT NULL DEFAULT 1 references department on delete cascade,
+    position TEXT NOT NULL DEFAULT 'employee',
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
@@ -34,10 +47,20 @@ CREATE TABLE registration_code (
     updated_at TIMESTAMPTZ
 );
 
-
-CREATE TABLE department (
+CREATE TABLE document (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     title TEXT NOT NULL,
+    text TEXT NOT NULL,
+    department_id BIGINT,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+
+CREATE TABLE who_can_help (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    document_id BIGINT NOT NULL,
+    person_id BIGINT NOT NULL,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );

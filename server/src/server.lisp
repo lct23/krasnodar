@@ -14,10 +14,10 @@
                 #:*translation-file-root*)
   (:import-from #:app/vars
                 #:resend-api-key)
-  (:import-from #:reblocks-ui2/themes/zurb
-                #:make-zurb-theme)
   (:import-from #:reblocks-ui2/themes/api
                 #:*current-theme*)
+  (:import-from #:reblocks-ui2/themes/tailwind
+                #:make-tailwind-theme)
   (:shadow #:restart)
   (:export #:start
            #:restart
@@ -31,8 +31,8 @@
 ;;   (cl-i18n:load-language "translations.lisp"))
 
 
-(defvar *default-port* "10087")
-(defvar *default-interface* "localhost")
+(defparameter *default-port* "10090")
+(defparameter *default-interface* "localhost")
 
 (defvar *arguments* nil
   "Here we remember arguments given to START to apply them when restarting the server.")
@@ -81,7 +81,7 @@
   (setf reblocks/variables:*max-pages-per-session* 10)
 
   (setf *current-theme*
-        (make-zurb-theme))
+        (make-tailwind-theme))
 
   (reblocks/server:start :port port
 			 :interface interface

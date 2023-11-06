@@ -7,6 +7,7 @@
   :defsystem-depends-on ("40ants-asdf-system")
   :pathname "src"
   :depends-on ("reblocks"
+               "reblocks-ui2-tailwind"
                "clack-handler-hunchentoot"
                "app/server")
   :in-order-to ((test-op (test-op "app-tests"))))

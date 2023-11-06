@@ -1,6 +1,11 @@
 (uiop:define-package #:app/models/department
   (:use #:cl)
-  (:import-from #:mito))
+  (:import-from #:mito
+                #:find-dao
+                #:create-dao
+                #:select-dao)
+  (:import-from #:sxql
+                #:order-by))
 (in-package #:app/models/department)
 
 
@@ -13,11 +18,15 @@
 
 
 
+(defun get-department (id)
+  (find-dao 'department :id id))
+
+
 (defun get-departments ()
-  (mito:select-dao 'department
-    (sxql:order-by :title)))
+  (select-dao 'department
+    (order-by :title)))
 
 
 (defun create-department (title)
-  (mito:create-dao 'department
-                   :title title))
+  (create-dao 'department
+              :title title))

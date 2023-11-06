@@ -5,7 +5,7 @@
 (when (probe-file ".local-config.lisp")
   (load ".local-config.lisp"))
 
-(ql:quickload '(image-store app))
+(ql:quickload '(app))
 
 (when (probe-file "~/projects/sly-reblocks.lisp")
   (load "~/projects/sly-reblocks.lisp"))

@@ -17,6 +17,7 @@
   (:import-from #:reblocks-ui/form
                 #:with-html-form)
   (:import-from #:reblocks-ui2/tables/table
+                #:append-data
                 #:recalculate-cells
                 #:current-row
                 #:column
@@ -56,7 +57,16 @@
   (:import-from #:reblocks/widgets/string-widget
                 #:make-string-widget)
   (:import-from #:40ants-pg/connection
-                #:with-connection))
+                #:with-connection)
+  (:import-from #:reblocks-auth/models
+                #:get-nickname
+                #:anonymous-p)
+  (:import-from #:app/widgets/new-document-form)
+  (:import-from #:app/widgets/document-list)
+  (:import-from #:app/widgets/document)
+  (:import-from #:app/models/roles
+                #:hr-p)
+  (:import-from #:app/widgets/user-list))
 (in-package #:app/pages/landing)
 
 
@@ -118,24 +128,37 @@
     (let ((user (reblocks-auth/models:get-current-user)))
       (reblocks/html:with-html
         (cond
-          ((reblocks-auth/models:anonymous-p user)
-           (:p ("Надо [войти](/login)")))
+          ((anonymous-p user)
+           (:p ("Надо [войти](/login)"))
+           ;; Тест списка документов
+           ;; (let ((form (app/widgets/new-document-form::make-new-document-form-widget))
+           ;;       (list (app/widgets/document-list::make-document-list-widget)))
+           ;;   (event-emitter:on :object-created form
+           ;;                     (lambda (obj)
+           ;;                       (append-data list (list obj))
+           ;;                       (reblocks/widget:update list)
+           ;;                       (reblocks/widget:update form)))
+           ;;   (render list)
+           ;;   (render form))
+
+           ;;  Тест просмотра документа
+           (render (app/widgets/document::make-document-widget 19))
+
+           ;; (render (app/widgets/add-user-form::make-add-user-form-widget))
+           )
           (t
-           (:p ("Ты залогинен как ~A" (reblocks-auth/models:get-nickname user)))
+           (:p ("Ты залогинен как ~A" (get-nickname user)))
            (:p ("[Выйти](/logout)."))
            
            (cond
-             ((app/models/roles::hr-p user)
-              ;; (:p "Новый список")
-              ;; (render
-              ;;  (app/widgets/user-list::make-user-list-widget2))
-              ;; (:hr)
-              ;; (:p "Old code")
-              ;; (:hr)
+             ((hr-p user)
               (let* ((user-list (app/widgets/user-list::make-user-list-widget))
-                     (form (app/widgets/add-user-form::make-add-user-form-widget
-                            :on-add (lambda ()
-                                      (reblocks/widget:update user-list)))))
+                     (form (app/widgets/add-user-form::make-add-user-form-widget)))
+                (event-emitter:on :object-created form
+                                  (lambda (user)
+                                    (declare (ignore user))
+                                    (reblocks/widget:update user-list)
+                                    (reblocks/widget:update form)))
                 (render user-list)
                 (render form)))
              (t

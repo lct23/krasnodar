@@ -1,5 +1,7 @@
 (uiop:define-package #:app/models/user
-  (:use #:cl))
+  (:use #:cl)
+  (:import-from #:app/models/department
+                #:department))
 (in-package #:app/models/user)
 
 
@@ -10,10 +12,25 @@
     ;; - employee
     ;; - boss
     ;; - mentor
-    ((roles :col-type "text[]"
+    ((name :col-type :text
+           :initarg :name
+           :accessor user-name
+           :documentation "Фамилия и Имя сотрудника")
+     (avatar-url :col-type (or :null :text)
+                 :initarg :avatar-url
+                 :accessor user-avatar-url)
+     (roles :col-type "text[]"
             :initform "{}"
             :initarg :roles
-            :reader user-roles))
+            :accessor user-roles)
+     (department :col-type department
+                 :initarg :department
+                 :accessor user-department)
+     (position :col-type :text
+               :initform "employee"
+               :initarg :position
+               :accessor user-position
+               :documentation "Должность: boss для руководителя отдела или employee для обычного работника."))
     (:metaclass mito:dao-table-class))
 
   (setf reblocks-auth/models::*user-class*
