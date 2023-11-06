@@ -27,7 +27,9 @@
                 #:make-logout-processor
                 #:make-login-processor)
   (:import-from #:app/widgets/departments-list
-                #:make-departments-list-widget))
+                #:make-departments-list-widget)
+  (:import-from #:app/pages/chats)
+  (:import-from #:app/pages/kb))
 (in-package #:app/app)
 
 
@@ -44,6 +46,10 @@
              (make-login-processor)))
   ("/logout" (make-page-frame
              (make-logout-processor)))
+  ("/kb" (make-page-frame
+          (app/pages/kb::make-kb-widget)))
+  ("/chats" (make-page-frame
+             (app/pages/chats::make-chats-widget)))
   ("/departments" (make-page-frame
              (make-departments-list-widget)))
   ;; ("/" (make-page-frame

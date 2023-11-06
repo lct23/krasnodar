@@ -16,6 +16,8 @@
                 #:yandex-metrika-code
                 #:*text-color*
                 #:*dark-background*)
+  (:import-from #:reblocks/html
+                #:with-html)
   (:export #:make-page-frame))
 (in-package #:app/widgets/frame)
 
@@ -65,7 +67,7 @@
 
 
 (defmethod render ((widget frame-widget))
-  (reblocks/html:with-html
+  (with-html
     (:raw (make-yandex-metrika-code))
     (:header
      ;; (:div :class "navbar"
@@ -83,6 +85,9 @@
      ;;                     "Войти"))))
      )
 
+    ;; sidebar
+    (render-sidebar)
+    
     (:div :class (if (widep widget)
                      "w-full px-8"
                      "w-full px-8 py-4"
@@ -99,6 +104,9 @@
     ;;                 (:img :src "https://altezza-store.ru/images/telegram.png")))))
     ))
 
+
+(defmethod reblocks/widget:get-css-classes ((widget frame-widget))
+  (list "flex"))
 
 
 (defmethod get-dependencies ((widget frame-widget))
@@ -180,3 +188,34 @@
    
   ;;  (call-next-method))
   )
+
+
+(defun render-sidebar ()
+  (with-html
+    (flet ((item (path title)
+             (let* ((current (string-equal path (reblocks/request:get-path)))
+                    (class (if current
+                               "pl-4 p-1 mr-4 bg-pink-400 rounded-e-full"
+                               "pl-4 p-1 mr-4")))
+               (:li :class class
+                    (:a :class "w-full"
+                        :href path
+                        title))))
+           (title (text)
+             (:h1 :class "font-bold mt-4 mb-2"
+                  text)))
+      (:div :class "w-30 border-r-2 whitespace-nowrap min-h-screen"
+            (:div :class "border-b-2 p-4"
+                  (:a :href "/"
+                      "HR Flirt"))
+
+            (:div :class "py-4"
+                  (:ul
+                   (item "/kb" "База знаний")
+                   (item "/chats" "Чаты"))
+                 
+                  (title "Мои задачи")
+                  
+                  (:ul
+                   (item "/calendar" "Календарь")
+                   (item "/progress" "Мой прогресс")))))))

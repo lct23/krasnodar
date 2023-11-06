@@ -10,7 +10,8 @@
   (:import-from #:app/models/document
                 #:document-text
                 #:document-title
-                #:get-document))
+                #:get-document)
+  (:import-from #:3bmd))
 (in-package #:app/widgets/document)
 
 
