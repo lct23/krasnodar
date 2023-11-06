@@ -1,0 +1,3 @@
+[submodule "bundle/cl-i18n"]
+	path = bundle/cl-i18n
+	url = https://notabug.org/cage/cl-i18n.git

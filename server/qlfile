@@ -1,0 +1,7 @@
+dist ultralisp http://dist.ultralisp.org/
+
+# This branch is what I use in my Emacs.
+github slynk svetlyak40wt/sly :branch patches
+
+
+github reblocks-prometheus 40ants/reblocks-prometheus :branch master

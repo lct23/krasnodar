@@ -1,0 +1,20 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+
+(when (probe-file ".local-config.lisp")
+  (load ".local-config.lisp"))
+
+(progn
+  (ros:ensure-asdf)
+  #+quicklisp
+  (ql:quickload (list "app/main")
+                :silent t))
+
+(in-package #:cl-user)
+
+(import 'app/main::main)
+
+;;; vim: set ft=lisp lisp:

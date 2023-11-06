@@ -1,0 +1,28 @@
+#|-*- mode:lisp -*-|#
+(ql:quickload :serapeum
+              :silent t)
+
+(uiop:define-package #:lake-user
+  (:use #:lake
+        #:serapeum))
+(cl:in-package #:lake-user)
+
+(task "dbshell" ()
+  (cl:load ".local-config.lisp")
+  
+  (sh (fmt "psql 'host=~A port=~A user=~A dbname=~A password=~A'"
+           (uiop:getenv "DB_HOST")
+           (uiop:getenv "DB_PORT")
+           (uiop:getenv "DB_USER")
+           (uiop:getenv "DB_NAME")
+           (uiop:getenv "DB_PASSWORD"))))
+
+(task "build" ()
+      (cl:loop for service in (cl:list "app"
+                                       "image-store")
+            do (sh (fmt "qlot exec ros build ~A/roswell/~A.ros"
+                        service
+                        service))))
+
+(task "default" ("build")
+  (echo "This was default task."))

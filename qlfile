@@ -1,0 +1,27 @@
+dist ultralisp http://dist.ultralisp.org/
+
+github slynk svetlyak40wt/sly :branch patches
+
+# Waiting for this pull:
+# https://github.com/eyedouble/cl-json-web-tokens/pulls
+# github cl-json-web-tokens svetlyak40wt/cl-json-web-tokens :branch fix-padding-on-decode
+
+# git cl-i18n https://notabug.org/svetlyak40wt/cl-i18n.git :branch fix-russian-ukranian-serbian-crotian-plural
+
+# github openrpc 40ants/openrpc :branch new-version-0.5
+
+# github 40ants-openrpc 40ants/40ants-openrpc :branch new-version
+
+# github reblocks 40ants/reblocks :branch new-version-0.51
+
+# github reblocks-websocket 40ants/reblocks-websocket
+
+# github reblocks-ui 40ants/reblocks-ui :branch master
+
+# github reblocks-ui2 40ants/reblocks-ui2 :branch master
+
+# github 40ants-pg 40ants/40ants-pg :branch master
+
+# Until this PR will be merged:
+# https://github.com/thephoeron/cl-isaac/pull/13
+github cl-isaac svetlyak40wt/cl-isaac :branch fix-value-1-error

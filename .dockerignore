@@ -1,0 +1,11 @@
+.git/
+.qlot/
+env/
+quicklisp/
+build/
+postgresql-data/
+logs/
+db/dumps/
+app
+.local-config.lisp
+Dockerfile
