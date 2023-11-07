@@ -11,7 +11,7 @@
 
 
 (defparameter *button-classes*
-  "max-h-12 border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline")
+  "whitespace-nowrap max-h-12 border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline")
 
 (defparameter *small-button-classes*
   "max-h-6 border border-green-500 bg-green-500 text-white rounded-md px-1 mx-2 transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline")

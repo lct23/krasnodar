@@ -205,13 +205,14 @@
 
 
 (defmethod render ((widget add-questionnaire-widget))
-  (render
-   (button "Добавить опрос"
-           :on-click (lambda (&rest rest)
-                       (declare (ignore rest))
-                       (event-emitter:emit :object-created widget
-                                           (make-questionnaire)))
-           :class *button-classes*)))
+  (flet ((add-questionnaire (&key title &allow-other-keys)
+           (event-emitter:emit :object-created widget
+                               (make-questionnaire title))))
+    (with-html-form (:post #'add-questionnaire
+                     :class "w-full mb-8 flex items-center")
+      (text-input "title" :placeholder "Название опроса"
+                  :label "Новый опрос")
+      (submit-button :text "Добавить опрос"))))
 
 
 (defmethod render ((widget add-question-form-widget))

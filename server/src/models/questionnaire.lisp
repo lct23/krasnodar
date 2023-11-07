@@ -43,8 +43,9 @@
   (:metaclass mito:dao-table-class))
 
 
-(defun make-questionnaire ()
-  (mito:create-dao 'questionnaire))
+(defun make-questionnaire (title)
+  (mito:create-dao 'questionnaire
+                   :title title))
 
 
 (defun get-questionnairies ()
