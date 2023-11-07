@@ -6,7 +6,11 @@
 
 
 (defclass questionnaire ()
-  ((document :col-type (or :null document)
+  ((title :col-type :text
+          :initform ""
+          :initarg :title
+          :accessor questionnaire-title)
+   (document :col-type (or :null document)
              :initform nil
              :initarg :document
              :accessor questionnaire-document))
@@ -39,7 +43,7 @@
   (:metaclass mito:dao-table-class))
 
 
-(defun make-questionnare ()
+(defun make-questionnaire ()
   (mito:create-dao 'questionnaire))
 
 

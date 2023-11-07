@@ -71,6 +71,7 @@ CREATE TABLE who_can_help (
 CREATE TABLE questionnaire (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     document_id BIGINT,
+    title TEXT NOT NULL DEFAULT '',
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );

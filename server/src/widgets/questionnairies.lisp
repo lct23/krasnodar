@@ -28,6 +28,7 @@
   (:import-from #:reblocks-ui2/buttons/button
                 #:button)
   (:import-from #:app/models/questionnaire
+                #:questionnaire-title
                 #:delete-question
                 #:delete-possible-answer
                 #:possible-answer-correct-p
@@ -39,7 +40,7 @@
                 #:question
                 #:questionnaire
                 #:add-question
-                #:make-questionnare)
+                #:make-questionnaire)
   (:import-from #:str
                 #:replace-all)
   (:import-from #:reblocks-ui/form
@@ -74,15 +75,27 @@
                      :type (soft-list-of possible-answer-widget)
                      :accessor possible-answers)))
 
+(defwidget add-question-form-widget (event-emitter ui-widget)
+  ((questionnaire :initarg :questionnaire
+                 :type questionnaire
+                 :reader questionnaire)))
+
 
 (defwidget questionnaire-widget (event-emitter ui-widget)
-  ((questionnare :initarg :questionnare
+  ((questionnaire :initarg :questionnaire
                  :type questionnaire
-                 :reader questionnare)
+                 :reader questionnaire)
    (questions :initform nil
               :initarg :questions
               :type (soft-list-of question-widget)
-              :accessor questions)))
+              :accessor questions)
+   (form :initarg :form
+         :type add-question-form-widget
+         :reader form)))
+
+
+(defwidget add-questionnaire-form-widget (event-emitter ui-widget)
+  ())
 
 
 (defwidget questionnairies-widget ()
@@ -141,13 +154,24 @@
   (make-instance 'add-questionnaire-widget))
 
 
-(defun make-questionnaire-widget (questionnare)
-  (let ((widget (make-instance 'questionnaire-widget
-                               :questionnare questionnare
-                               :questions (mapcar #'make-question-widget
-                                                  (get-questionnaire-questions questionnare)))))
-    (add-deletion-callbacks (questions widget))
-    (values widget)))
+(defun make-questionnaire-widget (questionnaire)
+  (let* ((form (make-instance 'add-question-form-widget
+                              :questionnaire questionnaire))
+         (widget (make-instance 'questionnaire-widget
+                                :questionnaire questionnaire
+                                :questions (mapcar #'make-question-widget
+                                                   (get-questionnaire-questions questionnaire))
+                                :form form)))
+    (flet ((add-question (new-question)
+             (add-to-the-end widget
+                             (questions widget)
+                             (make-question-widget new-question))
+             (update form)))
+      (event-emitter:on :object-created form
+                        #'add-question)
+      
+      (add-deletion-callbacks (questions widget))
+      (values widget))))
 
 
 (defun make-questionnairies-widget ()
@@ -186,31 +210,37 @@
            :on-click (lambda (&rest rest)
                        (declare (ignore rest))
                        (event-emitter:emit :object-created widget
-                                           (make-questionnare)))
+                                           (make-questionnaire)))
            :class *button-classes*)))
 
 
-(defmethod render ((widget questionnaire-widget))
+(defmethod render ((widget add-question-form-widget))
   (flet ((add-question (&key question &allow-other-keys)
-           (let ((new-question (add-question (questionnare widget) question)))
-             (add-to-the-end widget
-                             (questions widget)
-                             (make-question-widget new-question)))))
-    (with-html
-      (cond
-        ((questions widget)
-         (loop for widget in (questions widget)
-               do (render widget)))
-        (t
-         (:div :class "mb-4"
-               "В этом опроснике пока нет ни одного вопроса."))))
-
-    ;; TODO: Надо переделать на виджет, чтобы сбрасывать форму отдельно от поля
+           (let ((new-question (add-question (questionnaire widget) question)))
+             (event-emitter:emit :object-created widget
+                                 new-question))))
     (with-html-form (:post #'add-question
                      :class "w-full mb-8 flex items-center")
       (text-input "question"
                   :label "Добавить вопрос")
       (submit-button :text "Добавить"))))
+
+
+(defmethod render ((widget questionnaire-widget))
+  (with-html
+    (:h1 :class "font-bold"
+         (questionnaire-title
+          (questionnaire widget)))
+      
+    (cond
+      ((questions widget)
+       (loop for widget in (questions widget)
+             do (render widget)))
+      (t
+       (:div :class "mb-4"
+             "В этом опроснике пока нет ни одного вопроса.")))
+
+    (render (form widget))))
 
 
 (defmethod get-css-classes ((widget questionnaire-widget))
