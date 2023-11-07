@@ -29,7 +29,8 @@
   (:import-from #:app/widgets/departments-list
                 #:make-departments-list-widget)
   (:import-from #:app/pages/chats)
-  (:import-from #:app/pages/kb))
+  (:import-from #:app/pages/kb)
+  (:import-from #:app/pages/playground))
 (in-package #:app/app)
 
 
@@ -50,8 +51,10 @@
           (app/pages/kb::make-kb-widget)))
   ("/chats" (make-page-frame
              (app/pages/chats::make-chats-widget)))
+  ("/playground" (make-page-frame
+                  (app/pages/playground::make-playground-widget)))
   ("/departments" (make-page-frame
-             (make-departments-list-widget)))
+                   (make-departments-list-widget)))
   ;; ("/" (make-page-frame
   ;;             (make-login-page)))
   ("/" (make-page-frame

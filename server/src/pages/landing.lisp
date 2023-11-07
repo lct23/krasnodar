@@ -171,20 +171,24 @@
         ;;                         :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
         ;;                         "Просто кнопка2"))))
         ))
-    (when (and (not reblocks-websocket:*background*)
-               (not (page-metadata (current-page)
-                                   "waiter-thread")))
-      (let ((page (current-page)))
-        (log:info "Making a thread to update the page" page))
+    
+    ;; Это нужно только в dev, иначе течёт память и поисковые роботы
+    ;; быстро убивают сервер
+    ;; (when (and (not reblocks-websocket:*background*)
+    ;;            (not (page-metadata (current-page)
+    ;;                                "waiter-thread")))
+    ;;   (let ((page (current-page)))
+    ;;     (log:info "Making a thread to update the page" page))
      
-      (reblocks-websocket:in-thread ("waiter")
-        (setf (page-metadata (current-page) "waiter-thread")
-              (bt2:current-thread))
-        ;; (setf *already-waiting*)
-        (unwind-protect
-             (wait-for-update)
-          (setf (page-metadata (current-page) "waiter-thread")
-                nil))))))
+    ;;   (reblocks-websocket:in-thread ("waiter")
+    ;;     (setf (page-metadata (current-page) "waiter-thread")
+    ;;           (bt2:current-thread))
+    ;;     ;; (setf *already-waiting*)
+    ;;     (unwind-protect
+    ;;          (wait-for-update)
+    ;;       (setf (page-metadata (current-page) "waiter-thread")
+    ;;             nil))))
+    ))
 
 
 ;; (defvar *last-deps* nil)

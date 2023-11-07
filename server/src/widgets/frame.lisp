@@ -214,8 +214,13 @@
                    (item "/kb" "База знаний")
                    (item "/chats" "Чаты"))
                  
-                  (title "Мои задачи")
+                  ;; (title "Мои задачи")
+                  ;; (:ul
+                  ;;  (item "/calendar" "Календарь")
+                  ;;  (item "/progress" "Мой прогресс"))
+
+                  (title "Временные странички")
                   
                   (:ul
-                   (item "/calendar" "Календарь")
-                   (item "/progress" "Мой прогресс")))))))
+                   (item "/departments" "Отделы")
+                   (item "/playground" "Песочница")))))))

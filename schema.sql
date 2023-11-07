@@ -64,3 +64,32 @@ CREATE TABLE who_can_help (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
+
+
+-- Вопросники
+
+CREATE TABLE questionnaire (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    document_id BIGINT,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+
+CREATE TABLE question (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    questionnaire_id BIGINT NOT NULL REFERENCES questionnaire ON DELETE CASCADE,
+    question TEXT NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+
+CREATE TABLE possible_answer (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    question_id BIGINT NOT NULL  REFERENCES question ON DELETE CASCADE,
+    text TEXT NOT NULL,
+    correct BOOLEAN NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);

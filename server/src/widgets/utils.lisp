@@ -10,16 +10,23 @@
 (in-package #:app/widgets/utils)
 
 
+(defparameter *button-classes*
+  "max-h-12 border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline")
+
+(defparameter *small-button-classes*
+  "max-h-6 border border-green-500 bg-green-500 text-white rounded-md px-1 mx-2 transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline")
+
+
 (defun submit-button (&key (text "Добавить"))
   (with-html
     (:button :type "submit"
-             :class "border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline"
+             :class *button-classes*
              text)))
 
 (defun text-input (name &key (type "text") placeholder label)
   (with-html
     (let ((input-id (symbol-name (gensym "dsd"))))
-      (:div :class ""
+      (:div :class "w-full"
             (when label
               (:label :for input-id
                       :class "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
