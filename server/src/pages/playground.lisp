@@ -24,6 +24,9 @@
 (defmethod render ((widget playground-widget))
   (title "Песочница")
 
-  (render (app/widgets/questionnairies::make-questionnairies-widget)))
+  ;; (render (app/widgets/questionnairies::make-questionnairies-widget))
+  ;; (render (app/widgets/add-board-form::make-add-board-form-widget))
+  (render (app/widgets/edit-board-form::make-edit-board-form-widget
+           (app/models/board::get-board 6))))
 
 

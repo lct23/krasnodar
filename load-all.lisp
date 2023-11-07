@@ -1,6 +1,6 @@
 (in-package :cl-user)
 
-(declaim (optimize (debug 3) (safety 3)))
+(declaim (optimize (debug 3) (safety 3) (speed 1)))
 
 (when (probe-file ".local-config.lisp")
   (load ".local-config.lisp"))

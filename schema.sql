@@ -94,3 +94,25 @@ CREATE TABLE possible_answer (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
+
+
+-- Онбординг
+
+CREATE TABLE board (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    department_id BIGINT REFERENCES department ON DELETE SET NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+
+CREATE TABLE board_period (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    board_id BIGINT NOT NULL REFERENCES board ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    from_day INTEGER NOT NULL,
+    to_day INTEGER NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);

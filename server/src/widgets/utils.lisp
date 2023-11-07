@@ -23,7 +23,7 @@
              :class *button-classes*
              text)))
 
-(defun text-input (name &key (type "text") placeholder label)
+(defun text-input (name &key (type "text") placeholder label value)
   (with-html
     (let ((input-id (symbol-name (gensym "dsd"))))
       (:div :class "w-full"
@@ -36,7 +36,8 @@
                           :name name
                           :id input-id
                           :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          :placeholder placeholder))))
+                          :placeholder placeholder
+                          :value value))))
     ;; (:input :name name
     ;;         :type type
     ;;         :class "border px-2 my-2"
@@ -73,7 +74,7 @@
          (when allow-empty
            (:option :selected (not selected-department-id)
                     :value ""
-                    "Не выбран"))
+                    "Для всех"))
          (loop for dep in (get-departments)
                do (:option :value (princ-to-string
                                    (object-id dep))
