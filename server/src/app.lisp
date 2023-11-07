@@ -74,7 +74,8 @@
    ;;   :crossorigin "anonymous"
    ;;   :type :css)
    (make-dependency
-     "https://cdn.tailwindcss.com"
+     ;; "https://cdn.tailwindcss.com" ;; В какой-то момент стал редиректить на самого себя, лучше явно указать версию
+     "https://cdn.tailwindcss.com/3.3.5"
      ;; "https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"
      :type :js)))
 

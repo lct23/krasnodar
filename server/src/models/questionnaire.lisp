@@ -43,9 +43,10 @@
   (:metaclass mito:dao-table-class))
 
 
-(defun make-questionnaire (title)
+(defun make-questionnaire (title &key document)
   (mito:create-dao 'questionnaire
-                   :title title))
+                   :title title
+                   :document document))
 
 
 (defun get-questionnairies ()
@@ -88,3 +89,13 @@
 (defun delete-possible-answer (answer)
   (check-type answer possible-answer)
   (mito:delete-dao answer))
+
+
+(defun make-default-questionnaire (document)
+  (let* ((questionnaire (make-questionnaire "Проверка"
+                                            :document document))
+         (question (add-question questionnaire
+                                 "Прочитан ли материал?")))
+    (add-possible-answer question "Да" :correct t)
+    (add-possible-answer question "Ещё нет")
+    (values questionnaire)))

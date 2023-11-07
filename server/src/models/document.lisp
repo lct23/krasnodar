@@ -15,15 +15,15 @@
   ((title :col-type :text
           :initform ""
           :initarg :title
-          :reader document-title)
+          :accessor document-title)
    (text :col-type :text
          :initform ""
          :initarg :text
-         :reader document-text)
+         :accessor document-text)
    (department :col-type (or :null department)
                :initform nil
                :initarg :department
-               :reader document-department))
+               :accessor document-department))
   (:metaclass mito:dao-table-class))
 
 
@@ -39,6 +39,11 @@
   (:metaclass mito:dao-table-class)
   (:documentation "Описывает связь между документом и людьми, которые могут помочь разобраться в этой теме."))
 
+
+(defun create-document (&key (title "") department)
+  (mito:create-dao 'document
+                   :title title
+                   :department department))
 
 
 (defun get-documents ()

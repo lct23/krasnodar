@@ -116,3 +116,13 @@ CREATE TABLE board_period (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
+
+
+CREATE TABLE knowledge (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    department_id BIGINT REFERENCES department ON DELETE SET NULL,
+    document_id BIGINT  REFERENCES document ON DELETE SET NULL,
+    questionnaire_id BIGINT REFERENCES questionnaire ON DELETE SET NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
