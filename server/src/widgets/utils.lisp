@@ -32,6 +32,12 @@
              :class *button-classes*
              text)))
 
+(defun redirect-button (text url)
+  (with-html
+    (:a :href url
+        :class *button-classes*
+        text)))
+
 (defun text-input (name &key (type "text") placeholder label value)
   (with-html
     (let ((input-id (symbol-name (gensym "dsd"))))
@@ -68,29 +74,36 @@
                :placeholder placeholder)))
 
 
+(defun label (text &key for-id)
+  (with-html
+    (:label :for for-id
+            :class "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+            text)))
+
+(defparameter *select-box-classes*
+  "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500")
+
 (defun department-select-box (name &key label allow-empty selected-department-id)
   ;; https://tailwindcomponents.com/component/select-input-field
   (with-html
     (let ((input-id (symbol-name (gensym "input"))))
       (:div :class "mb-6"
-       (when label
-         (:label :for input-id
-                 :class "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
-                 label))
-       (:select :id input-id
-         :name name
-         :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-         (when allow-empty
-           (:option :selected (not selected-department-id)
-                    :value ""
-                    "Для всех"))
-         (loop for dep in (get-departments)
-               do (:option :value (princ-to-string
-                                   (object-id dep))
-                           :selected (and selected-department-id
-                                          (equal selected-department-id
-                                                 (object-id dep)))
-                           (department-title dep))))))))
+            (when label
+              (label label :for-id input-id))
+            (:select :id input-id
+              :name name
+              :class *select-box-classes*
+              (when allow-empty
+                (:option :selected (not selected-department-id)
+                         :value ""
+                         "Для всех"))
+              (loop for dep in (get-departments)
+                    do (:option :value (princ-to-string
+                                        (object-id dep))
+                                :selected (and selected-department-id
+                                               (equal selected-department-id
+                                                      (object-id dep)))
+                                (department-title dep))))))))
 
 
 (defun knowledge-select-box (name &key label allow-empty selected-knowledge-id)

@@ -30,7 +30,15 @@
                 #:make-departments-list-widget)
   (:import-from #:app/pages/chats)
   (:import-from #:app/pages/kb)
-  (:import-from #:app/pages/playground))
+  (:import-from #:app/pages/playground)
+  (:import-from #:app/pages/dashboard/hr
+                #:make-hr-dashboard-widget)
+  (:import-from #:app/pages/personal
+                #:make-personal-widget)
+  (:import-from #:app/widgets/add-user-form
+                #:make-add-user-form-widget)
+  (:import-from #:app/pages/add-user
+                #:make-add-user-page))
 (in-package #:app/app)
 
 
@@ -55,10 +63,16 @@
                   (app/pages/playground::make-playground-widget)))
   ("/departments" (make-page-frame
                    (make-departments-list-widget)))
+  ("/personal" (make-page-frame
+                (make-personal-widget)))
+  ("/personal/add" (make-page-frame
+                    (make-add-user-page)))
   ;; ("/" (make-page-frame
   ;;             (make-login-page)))
   ("/" (make-page-frame
-        (make-landing-page)))
+        (make-hr-dashboard-widget)
+        ;; (make-landing-page)
+        ))
   )
 
 

@@ -21,7 +21,12 @@
                 #:user-department
                 #:user-avatar-url
                 #:user-name)
-  (:import-from #:reblocks-auth/providers/email/resend))
+  (:import-from #:reblocks-auth/providers/email/resend)
+  (:import-from #:app/widgets/utils
+                #:text-input
+                #:*select-box-classes*
+                #:label
+                #:department-select-box))
 (in-package #:app/widgets/add-user-form)
 
 
@@ -75,30 +80,35 @@
              (reblocks/widget:update widget))))
     
     (with-html-form (:post #'add-user
-                     :class "w-full my-8")
-      (:input :name "email"
-              :placeholder "Email сотрудника")
-      (:input :name "name"
-              :placeholder "Имя")
-      (:input :name "avatar-url"
-              :placeholder "Путь до аватарки (позже надо сделать загрузку)")
+                     :class "w-full my-8 flex flex-col gap-2")
+      (:div :class "flex gap-8"
+            (:div :class "flex flex-col gap-4"
+                  (:img :src "https://placekitten.com/200/300")
+                  (:input :name "avatar-url"
+                          :placeholder "Путь до аватарки (позже надо сделать загрузку)"))
       
-      (:select :name "department-id"
-        (loop for dep in (get-departments)
-              do (:option :value (princ-to-string
-                                  (mito:object-id dep))
-                          (department-title dep))))
-      
-      (:select :name "role"
-        (:option :value "employee"
-                 :selected t
-                 "Новый сотрудник")
-        (:option :value "boss"
-                 "Руководитель")
-        (:option :value "hr"
-                 "HR")
-        (:option :value "mentor"
-                 "Ментор"))
-      (:button :name "submit"
-               :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
-               "Добавить"))))
+            (:div :class "w-full flex flex-col"
+                  (text-input "email" :type "email"
+                                      :placeholder "Email сотрудника"
+                                      :label "Email")
+                  (text-input "name" :placeholder "Имя сотрудника"
+                                     :label "ФИО")
+                  
+                  (department-select-box "department-id"
+                                         :label "Отдел")
+
+                  (label "Роль")
+                  (:select :name "role" :class *select-box-classes*
+                    (:option :value "employee"
+                             :selected t
+                             "Новый сотрудник")
+                    (:option :value "boss"
+                             "Руководитель")
+                    (:option :value "hr"
+                             "HR")
+                    (:option :value "mentor"
+                             "Ментор"))))
+      (:div :class "flex justify-end mt-8"
+       (:button :name "submit"
+                :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+                "Добавить")))))

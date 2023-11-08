@@ -211,6 +211,7 @@
 
             (:div :class "py-4"
                   (:ul
+                   (item "/" "Дашборд")
                    (item "/kb" "База знаний")
                    (item "/chats" "Чаты"))
                  
@@ -223,4 +224,5 @@
                   
                   (:ul
                    (item "/departments" "Отделы")
+                   (item "/personal" "Сотрудники")
                    (item "/playground" "Песочница")))))))
