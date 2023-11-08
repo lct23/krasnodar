@@ -18,11 +18,18 @@
                 #:department-title
                 #:get-departments)
   (:import-from #:app/models/user
+                #:user-mentor
+                #:get-user
+                #:user-position
+                #:user-is-mentor-p
+                #:user-is-boss-p
                 #:user-department
                 #:user-avatar-url
                 #:user-name)
   (:import-from #:reblocks-auth/providers/email/resend)
   (:import-from #:app/widgets/utils
+                #:mentor-select-box
+                #:checkbox
                 #:text-input
                 #:*select-box-classes*
                 #:label
@@ -51,22 +58,21 @@
 
 
 (defmethod reblocks-ui2/widget:render ((widget add-user-form-widget) theme)
-  (flet ((add-user (&key email role name department-id avatar-url &allow-other-keys)
+  (flet ((add-user (&key email name department-id mentor-id position avatar-url is-mentor-p is-boss-p &allow-other-keys)
            (log:info "Adding user with" email)
 
            ;; Заранее зарегистрируем учётку
            (let ((user (reblocks-auth/models:create-social-user :email
                                                                 email
                                                                 :email email)))
-             ;; Пропишем ему роль сотрудника
-             ;; (app/models/roles::give-a-role user role)
-
              ;; Проставим дополнительные поля
-             (setf (app/models/user::user-roles user)
-                   (make-array 1 :initial-element role)
-                   (user-name user) name
+             (setf (user-name user) name
                    (user-avatar-url user) avatar-url
-                   (user-department user) (get-department department-id))
+                   (user-department user) (get-department department-id)
+                   (user-mentor user) (get-user mentor-id)
+                   (user-position user) position
+                   (user-is-mentor-p user) (string-equal is-mentor-p "true")
+                   (user-is-boss-p user) (string-equal is-boss-p "true"))
              (mito:save-dao user)
              
              ;; и отправим сотруднику email
@@ -96,18 +102,19 @@
                   
                   (department-select-box "department-id"
                                          :label "Отдел")
+                  
+                  (mentor-select-box "mentor-id"
+                                     :label "Ментор")
+                  
+                  (text-input "position" :placeholder "Должность"
+                                         :label "Должность")
 
-                  (label "Роль")
-                  (:select :name "role" :class *select-box-classes*
-                    (:option :value "employee"
-                             :selected t
-                             "Новый сотрудник")
-                    (:option :value "boss"
-                             "Руководитель")
-                    (:option :value "hr"
-                             "HR")
-                    (:option :value "mentor"
-                             "Ментор"))))
+                  (:div :class "flex"
+                        (checkbox "is-boss-p"
+                                  :label "Начальник")
+                  
+                        (checkbox "is-mentor-p"
+                                  :label "Может быть ментором"))))
       (:div :class "flex justify-end mt-8"
        (:button :name "submit"
                 :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"

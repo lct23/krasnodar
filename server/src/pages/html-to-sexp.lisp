@@ -14,6 +14,12 @@
     (labels
         ((iter (root &key (level 0))
            (cond
+             ((plump:comment-p root)
+              (let ((txt (string-trim '(#\Space #\Newline #\Backspace #\Tab 
+                                        #\Linefeed #\Page #\Return #\Rubout)
+                                      (plump:text root))))
+                (unless (equal txt "")
+                  (format s ";; \"~A\"" txt))))
              ((plump:text-node-p root)
               (let ((txt (string-trim '(#\Space #\Newline #\Backspace #\Tab 
                                         #\Linefeed #\Page #\Return #\Rubout)

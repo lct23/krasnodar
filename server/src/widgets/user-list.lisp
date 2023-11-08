@@ -8,6 +8,9 @@
   (:import-from #:reblocks/dependencies
                 #:get-dependencies)
   (:import-from #:app/models/user
+                #:user-mentor
+                #:user-is-mentor-p
+                #:user-is-boss-p
                 #:user-department
                 #:user-name
                 #:user-roles)
@@ -18,7 +21,9 @@
                 #:deparment-title)
   (:import-from #:reblocks-ui2/tables/editable-table)
   (:import-from #:app/widgets/add-user-form
-                #:make-add-user-form-widget))
+                #:make-add-user-form-widget)
+  (:import-from #:serapeum
+                #:fmt))
 (in-package #:app/widgets/user-list)
 
 
@@ -92,13 +97,28 @@
            (:td :class cell-classes
                 (:span :class span-classes
                        "Отдел")
-                (department-title
-                 (user-department user)))
+                (let ((is-boss (user-is-boss-p user))
+                      (title (department-title
+                              (user-department user))))
+                  (if is-boss
+                      (fmt "~A (начальник)" title)
+                      title)))
            (:td :class cell-classes
-                (:span :class span-classes)
-                (with-output-to-string (s)
-                  (loop for role across (app/models/user::user-roles user)
-                        do (format s "~A " role))))
+                (:span :class span-classes
+                       "Должность")
+                (app/models/user::user-position user))
+           (:td :class cell-classes
+                (:span :class span-classes
+                       "Ментор")
+                (cond
+                  ((user-is-mentor-p user)
+                   "Да")
+                  ;; Выведем имя ментора
+                  ((user-mentor user)
+                   (user-name
+                    (user-mentor user)))
+                  (t
+                   "")))
            (:td :class cell-classes
                 (:span :class span-classes)
                 "")))))
@@ -114,17 +134,9 @@
                     (:th :class header-classes "Email")
                     (:th :class header-classes "Имя")
                     (:th :class header-classes "Отдел")
-                    (:th :class header-classes "Роли")
+                    (:th :class header-classes "Должность")
+                    (:th :class header-classes "Ментор")
                     (:th :class header-classes "Действия")))
               (:tbody
                (loop for user in (get-all-users)
                      do (render-user user)))))))
-
-
-;; (defmethod get-dependencies ((widget user-list-widget))
-;;   (list*
-;;    (reblocks-lass:make-dependency
-;;      `(.user-list-widget
-;;        :color red))
-;;    (call-next-method)))
-
