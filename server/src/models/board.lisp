@@ -85,6 +85,10 @@
     (values board)))
 
 
+(defun get-boards ()
+  (select-dao 'board
+    (order-by :title)))
+
 (defun get-board (id)
   (find-dao 'board :id id))
 

@@ -24,6 +24,7 @@
   (:import-from #:40ants-pg/transactions
                 #:with-transaction)
   (:import-from #:mito
+                #:object-id
                 #:find-dao
                 #:create-dao))
 (in-package #:app/models/board-progress)
@@ -157,6 +158,10 @@
     ((user-progress user)
      (user-progress user))
     (t
+     (let ((user-id (object-id user))
+           (board-id (object-id board)))
+       (log:info "Assigning board" user-id board-id))
+     
      (with-transaction
          (let* ((bp (create-dao 'board-progress
                                 :user user

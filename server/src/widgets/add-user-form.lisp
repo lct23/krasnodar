@@ -29,6 +29,7 @@
                 #:user-name)
   (:import-from #:reblocks-auth/providers/email/resend)
   (:import-from #:app/widgets/utils
+                #:board-select-box
                 #:mentor-select-box
                 #:checkbox
                 #:text-input
@@ -41,7 +42,17 @@
                 #:get-email
                 #:create-social-user)
   (:import-from #:mito
-                #:object-id))
+                #:object-id)
+  (:import-from #:app/models/board
+                #:get-board
+                #:board-title)
+  (:import-from #:app/models/board-progress
+                #:assign-board
+                #:user-progress)
+  (:import-from #:serapeum
+                #:fmt)
+  (:import-from #:app/models/board-progress
+                #:board))
 (in-package #:app/widgets/add-user-form)
 
 
@@ -70,7 +81,7 @@
 
 
 (defmethod reblocks-ui2/widget:render ((widget add-user-form-widget) theme)
-  (flet ((add-user (&key email name department-id mentor-id position avatar-url is-mentor-p is-boss-p &allow-other-keys)
+  (flet ((add-user (&key email name department-id mentor-id position avatar-url is-mentor-p is-boss-p board-id &allow-other-keys)
            (let ((user (user widget))
                  (user-created nil))
              (cond
@@ -84,6 +95,10 @@
                                           email
                                           :email email)
                       user-created t)))
+
+             (unless (str:emptyp board-id)
+               (assign-board user
+                             (get-board board-id)))
              
              ;; Проставим дополнительные поля
              (setf (user-name user) name
@@ -127,20 +142,20 @@
                                        :label "ФИО"
                                        :value (when user
                                                 (user-name user)))
-                   
+
                     (department-select-box "department-id"
                                            :label "Отдел"
                                            :selected-department-id (when user
                                                                      (object-id
                                                                       (user-department user))))
-                   
+
                     (mentor-select-box "mentor-id"
                                        :label "Ментор"
                                        :selected-mentor-id (when (and user
                                                                       (user-mentor user))
                                                              (object-id
                                                               (user-mentor user))))
-                   
+
                     (text-input "position" :placeholder "Должность"
                                            :label "Должность"
                                            :value (when user
@@ -151,11 +166,19 @@
                                     :label "Начальник"
                                     :checked (when user
                                                (user-is-boss-p user)))
-                         
+
                           (checkbox "is-mentor-p"
                                     :label "Может быть ментором"
                                     :checked (when user
-                                               (user-is-mentor-p user))))))
+                                               (user-is-mentor-p user))))
+                    ;; Назначение онбординга
+                    (cond
+                      ((user-progress user)
+                       (:p (fmt "Сотрудник уже проходит онбординг: ~A"
+                                (board-title (board (user-progress user))))))
+                      (t
+                       (board-select-box "board-id"
+                                         :label "Начать онбординг")))))
         (:div :class "flex justify-end mt-8"
               (:button :name "submit"
                        :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"

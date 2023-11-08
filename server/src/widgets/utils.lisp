@@ -20,7 +20,10 @@
   (:import-from #:app/models/user
                 #:user-department
                 #:get-all-mentors
-                #:user-name))
+                #:user-name)
+  (:import-from #:app/models/board
+                #:board-title
+                #:get-boards))
 (in-package #:app/widgets/utils)
 
 
@@ -192,7 +195,7 @@
                       label))
             (:select :id input-id
               :name name
-              :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              :class *select-box-classes*
               (when allow-empty
                 (:option :selected (not selected-knowledge-id)
                          :value ""
@@ -204,6 +207,29 @@
                                                (equal selected-knowledge-id
                                                       (object-id obj)))
                                 (knownledge-title obj))))))))
+
+
+
+(defun board-select-box (name &key label)
+  ;; https://tailwindcomponents.com/component/select-input-field
+  (with-html
+    (let ((input-id (symbol-name (gensym "input"))))
+      (:div :class "mb-6"
+            (when label
+              (:label :for input-id
+                      :class "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+                      label))
+            (:select :id input-id
+              :name name
+              :class *select-box-classes*
+              
+              (:option :value ""
+                       "---")
+              
+              (loop for obj in (get-boards)
+                    do (:option :value (princ-to-string
+                                        (object-id obj))
+                                (board-title obj))))))))
 
 
 (defmacro add-deletion-callbacks (list-form)
