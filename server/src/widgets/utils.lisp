@@ -106,7 +106,7 @@
       </svg>")
 
 
-(defun checkbox (name &key label)
+(defun checkbox (name &key label checked)
   ;; https://tailwindcomponents.com/component/tailwind-css-checkbox-with-label-by-material-tailwind
   (with-html
     (let ((input-id (symbol-name (gensym "input"))))
@@ -117,6 +117,7 @@
                             :name name
                             :type "checkbox"
                             :value "true"
+                            :checked (not (null checked))
                             :class *checkbox-classes*)
                     (:div :class "pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100"
                           (:raw *checkbox-svg-icon*)))

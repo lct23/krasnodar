@@ -38,7 +38,9 @@
   (:import-from #:app/widgets/add-user-form
                 #:make-add-user-form-widget)
   (:import-from #:app/pages/add-user
-                #:make-add-user-page))
+                #:make-add-user-page)
+  (:import-from #:app/pages/edit-user
+                #:make-edit-user-page))
 (in-package #:app/app)
 
 
@@ -67,6 +69,8 @@
                 (make-personal-widget)))
   ("/personal/add" (make-page-frame
                     (make-add-user-page)))
+  ("/personal/\\d+/edit" (make-page-frame
+                         (make-edit-user-page)))
   ;; ("/" (make-page-frame
   ;;             (make-login-page)))
   ("/" (make-page-frame

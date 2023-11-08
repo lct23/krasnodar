@@ -23,7 +23,11 @@
   (:import-from #:app/widgets/add-user-form
                 #:make-add-user-form-widget)
   (:import-from #:serapeum
-                #:fmt))
+                #:fmt)
+  (:import-from #:app/widgets/utils
+                #:redirect-button)
+  (:import-from #:mito
+                #:object-id))
 (in-package #:app/widgets/user-list)
 
 
@@ -121,7 +125,9 @@
                    "")))
            (:td :class cell-classes
                 (:span :class span-classes)
-                "")))))
+                (redirect-button "Редактировать"
+                                 (fmt "/personal/~A/edit"
+                                      (object-id user))))))))
 
 
 (defmethod render ((widget user-list-widget))
