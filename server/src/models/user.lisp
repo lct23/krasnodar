@@ -3,7 +3,11 @@
   (:import-from #:app/models/department
                 #:department)
   (:import-from #:mito
-                #:select-by-sql))
+                #:select-by-sql)
+  (:import-from #:app/models/board
+                #:board)
+  (:import-from #:app/models/board-progress
+                #:board-progress))
 (in-package #:app/models/user)
 
 
@@ -65,6 +69,6 @@
 
 (defun get-user (id)
   (when (and id
-             (not (string= id "")))
+             (not (equal id "")))
     (mito:find-dao 'user
                    :id id)))

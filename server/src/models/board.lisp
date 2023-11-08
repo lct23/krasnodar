@@ -58,7 +58,7 @@
    (knowledge :col-type knowledge
               :initarg :knowledge
               :reader knowledge))
-  (:documentation "Связб между знанием и периодом онбординга")
+  (:documentation "Связь между знанием и периодом онбординга")
   (:metaclass mito:dao-table-class))
 
 

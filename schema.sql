@@ -137,3 +137,54 @@ CREATE TABLE period_knowledge (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
+
+
+-- Структура для логгированию прогресса прохождения онбордингов
+
+CREATE TABLE board_progress (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES "user" ON DELETE CASCADE,
+    board_id BIGINT NOT NULL REFERENCES board ON DELETE CASCADE,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+CREATE TABLE period_progress (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    board_progress_id BIGINT NOT NULL REFERENCES "board_progress" ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    starts_at TIMESTAMPTZ NOT NULL,
+    ends_at TIMESTAMPTZ NOT NULL,
+    progress INTEGER NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+CREATE TABLE questionnaire_results (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    questionnaire_id BIGINT NOT NULL REFERENCES "questionnaire" ON DELETE CASCADE,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+CREATE TABLE question_response (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    questionnaire_results_id BIGINT NOT NULL REFERENCES "questionnaire_results" ON DELETE CASCADE,
+    question_id BIGINT NOT NULL REFERENCES "question" ON DELETE CASCADE,
+    answer_id BIGINT REFERENCES "possible_answer" ON DELETE CASCADE,
+    answered_at TIMESTAMPTZ,
+    answer_is_correct BOOLEAN,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+
+CREATE TABLE period_knowledge_progress (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    period_progress_id BIGINT NOT NULL REFERENCES "period_progress" ON DELETE CASCADE,
+    period_knowledge_id BIGINT NOT NULL REFERENCES "period_knowledge" ON DELETE CASCADE,
+    questionnaire_results_id BIGINT NOT NULL REFERENCES "questionnaire_results" ON DELETE CASCADE,
+    questionnaire_progress INTEGER NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
