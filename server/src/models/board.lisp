@@ -11,7 +11,9 @@
                 #:user)
   (:import-from #:sxql
                 #:where
-                #:order-by))
+                #:order-by)
+  (:import-from #:models/app/knowledge
+                #:knowledge))
 (in-package #:app/models/board)
 
 
@@ -49,6 +51,17 @@
   (:metaclass mito:dao-table-class))
 
 
+(defclass period-knowledge ()
+  ((period :col-type board-period
+          :initarg :period
+           :reader period)
+   (knowledge :col-type knowledge
+              :initarg :knowledge
+              :reader knowledge))
+  (:documentation "Связб между знанием и периодом онбординга")
+  (:metaclass mito:dao-table-class))
+
+
 (defparameter *default-periods*
   (list (list "1 день"                0        0)
         (list "1 неделя"              1        6)
@@ -80,3 +93,18 @@
   (select-dao 'board-period
     (where (:= :board_id (object-id board)))
     (order-by :from-day)))
+
+
+(defun period-knowledges (period)
+  (select-dao 'period-knowledge
+    (where (:= :period_id (object-id period)))
+    (order-by :id)))
+
+
+(defun bind-knowledge-to-period (period knowledge)
+  (check-type period board-period)
+  (check-type knowledge knowledge)
+  (mito:create-dao 'period-knowledge
+                   :period period
+                   :knowledge knowledge))
+

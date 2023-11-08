@@ -126,3 +126,12 @@ CREATE TABLE knowledge (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
+
+
+CREATE TABLE period_knowledge (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    period_id BIGINT NOT NULL REFERENCES board_period ON DELETE CASCADE,
+    knowledge_id BIGINT NOT NULL REFERENCES knowledge ON DELETE CASCADE,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);

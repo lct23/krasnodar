@@ -24,7 +24,9 @@
   (:import-from #:app/models/department
                 #:get-department)
   (:import-from #:str
-                #:emptyp))
+                #:emptyp)
+  (:import-from #:app/widgets/period-edit-form
+                #:make-period-edit-form-widget))
 (in-package #:app/widgets/edit-board-form)
 
 
@@ -66,5 +68,5 @@
       
     (with-html
       (loop for period in periods
-            do (:div (:p (period-title period)))))))
+            do (render (make-period-edit-form-widget period))))))
 

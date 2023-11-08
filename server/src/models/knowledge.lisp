@@ -9,6 +9,7 @@
   (:import-from #:sxql
                 #:order-by)
   (:import-from #:app/models/document
+                #:document-title
                 #:create-document
                 #:document)
   (:import-from #:app/models/questionnaire
@@ -32,6 +33,13 @@
   (:metaclass mito:dao-table-class))
 
 
+(defun knownledge-title (obj)
+  (check-type obj knowledge)
+  (if (knowledge-document obj)
+      (document-title (knowledge-document obj))
+      ""))
+
+
 (defun create-knowledge (&key document questionnaire department (title "Документ без названия"))
   (let* ((document (or document
                        (create-document :title title
@@ -51,3 +59,10 @@
 (defun get-knowledge (id)
   (mito:find-dao 'knowledge
                  :id id))
+
+(defun get-knowledges ()
+  (mito:select-by-sql 'knowledge
+                      "SELECT k.*
+                         FROM knowledge as k
+                         LEFT JOIN document as d ON k.document_id = d.id
+                        ORDER BY d.title"))
