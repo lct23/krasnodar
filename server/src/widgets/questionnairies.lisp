@@ -24,7 +24,9 @@
                 #:*small-button-classes*
                 #:text-input
                 #:submit-button
-                #:*button-classes*)
+                #:*button-classes*
+                #:add-deletion-callbacks
+                #:add-to-the-end)
   (:import-from #:reblocks-ui2/buttons/button
                 #:button)
   (:import-from #:app/models/questionnaire
@@ -104,36 +106,6 @@
    (questionnairies :initform nil
                     :initarg :questionnairies
                     :accessor questionnairies)))
-
-(defmacro add-deletion-callbacks (list-form)
-  `(flet ((remove-widget (w)
-            (setf ,list-form
-                  (remove w ,list-form))
-            (update w :remove t)))
-     (loop for widget in ,list-form
-           do (event-emitter:on :delete widget
-                                #'remove-widget))))
-
-
-(defmacro add-to-the-end (parent-widget list-form new-widget-form)
-  `(flet ((remove-widget (w)
-            (setf ,list-form
-                  (remove w ,list-form))
-            (update w :remove t)))
-     (let ((last-widget
-             (when ,list-form
-               (last-elt
-                ,list-form)))
-           (new-widget ,new-widget-form))
-       
-       (event-emitter:on :delete new-widget
-                         #'remove-widget)
-       
-       (push-end new-widget
-                 ,list-form)
-       (if last-widget
-           (update new-widget :inserted-after last-widget)
-           (update ,parent-widget)))))
 
 
 (defun make-possible-answer-widget (possible-answer)

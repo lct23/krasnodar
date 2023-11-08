@@ -9,7 +9,13 @@
                 #:object-id)
   (:import-from #:models/app/knowledge
                 #:knownledge-title
-                #:get-knowledges))
+                #:get-knowledges)
+  (:import-from #:alexandria
+                #:last-elt)
+  (:import-from #:serapeum
+                #:push-end)
+  (:import-from #:reblocks/widget
+                #:update))
 (in-package #:app/widgets/utils)
 
 
@@ -110,3 +116,35 @@
                                                (equal selected-knowledge-id
                                                       (object-id obj)))
                                 (knownledge-title obj))))))))
+
+
+(defmacro add-deletion-callbacks (list-form)
+  `(flet ((remove-widget (w)
+            (setf ,list-form
+                  (remove w ,list-form))
+            (reblocks/widget:update w :remove t)))
+     (loop for widget in ,list-form
+           do (event-emitter:on :delete widget
+                                #'remove-widget))))
+
+
+(defmacro add-to-the-end (parent-widget list-form new-widget-form)
+  `(flet ((remove-widget (w)
+            (setf ,list-form
+                  (remove w ,list-form))
+            (reblocks/widget:update w :remove t)))
+     (let ((last-widget
+             (when ,list-form
+               (last-elt
+                ,list-form)))
+           (new-widget ,new-widget-form))
+       
+       (event-emitter:on :delete new-widget
+                         #'remove-widget)
+       
+       (push-end new-widget
+                 ,list-form)
+       (if last-widget
+           (update new-widget :inserted-after last-widget)
+           (update ,parent-widget)))))
+

@@ -108,3 +108,8 @@
                    :period period
                    :knowledge knowledge))
 
+
+(defun remove-knowledge-from-period (period-knowledge)
+  (check-type period-knowledge period-knowledge)
+  (mito:delete-dao period-knowledge))
+
