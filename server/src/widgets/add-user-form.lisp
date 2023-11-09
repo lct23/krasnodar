@@ -166,13 +166,15 @@
               (:div :class "flex flex-col gap-4"
                     (if user
                         (:img :style "width: 200px"
-                              :src (user-avatar-url user))
+                              :src (when user
+                                     (user-avatar-url user)))
                         (:div :style "width: 200px;height: 200px" 
                               :class "bg-gray-200"))
 
                     (text-input "avatar-url"
                                 :placeholder "Путь до аватарки (позже надо сделать загрузку)"
-                                :value (user-avatar-url user)))
+                                :value (when user
+                                         (user-avatar-url user))))
              
               (:div :class "w-full flex flex-col"
                     (text-input "email" :type "email"

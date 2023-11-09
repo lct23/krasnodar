@@ -15,6 +15,7 @@
                 #:user-name
                 #:user-roles)
   (:import-from #:reblocks-auth/models
+                #:get-current-user
                 #:get-all-users)
   (:import-from #:app/models/department
                 #:department-title
@@ -27,7 +28,9 @@
   (:import-from #:app/widgets/utils
                 #:redirect-button)
   (:import-from #:mito
-                #:object-id))
+                #:object-id)
+  (:import-from #:app/models/roles
+                #:hr-p))
 (in-package #:app/widgets/user-list)
 
 
@@ -74,7 +77,7 @@
   (make-instance 'user-list-widget))
 
 
-(defun render-user (user)
+(defun render-user (user &key show-controls)
   (let ((cell-classes "w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static")
         (span-classes "lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"))
     (with-html
@@ -119,19 +122,23 @@
                     (user-mentor user)))
                   (t
                    "")))
-           (:td :class cell-classes
-                (:span :class span-classes)
-                (redirect-button "Открыть"
-                                 (fmt "/personal/~A"
-                                      (object-id user)))
-                (redirect-button "Редактировать"
-                                 (fmt "/personal/~A/edit"
-                                      (object-id user))))))))
+           (when show-controls
+             (:td :class cell-classes
+                  (:span :class span-classes)
+                  (redirect-button "Открыть"
+                                   (fmt "/personal/~A"
+                                        (object-id user)))
+                  (redirect-button "Редактировать"
+                                   (fmt "/personal/~A/edit"
+                                        (object-id user)))))))))
 
 
 (defmethod render ((widget user-list-widget))
   (let ((header-classes
-          "p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"))
+          "p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell")
+        (show-controls
+          (and (get-current-user)
+               (hr-p (get-current-user)))))
     (with-html
       (:table :class "border-collapse w-full"
               (:thead
@@ -140,7 +147,8 @@
                     (:th :class header-classes "Отдел")
                     (:th :class header-classes "Должность")
                     (:th :class header-classes "Ментор")
-                    (:th :class header-classes "Действия")))
+                    (when show-controls
+                      (:th :class header-classes "Действия"))))
               (:tbody
                (loop for user in (get-all-users)
-                     do (render-user user)))))))
+                     do (render-user user :show-controls show-controls)))))))

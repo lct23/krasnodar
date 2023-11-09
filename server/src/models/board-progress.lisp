@@ -197,9 +197,10 @@
 
 
 (defun user-progress (user)
-  (check-type user user)
-  (find-dao 'board-progress
-            :user user))
+  (check-type user (or null user))
+  (when user
+    (find-dao 'board-progress
+              :user user)))
 
 
 (defun assign-board (user board)
