@@ -235,7 +235,8 @@
                          (title "HR")
                          (:ul
                           (item "/departments" "Отделы")
-                          (item "/personal" "Сотрудники")))
+                          (item "/personal" "Сотрудники")
+                          (item "/boards" "Онбординги")))
 
                        (title "Временные странички")
                    

@@ -47,7 +47,11 @@
   (:import-from #:app/pages/user-switch
                 #:make-user-switch-page)
   (:import-from #:app/pages/dashboard/common
-                #:make-dashboard-page))
+                #:make-dashboard-page)
+  (:import-from #:app/pages/boards-list
+                #:make-boards-list-page)
+  (:import-from #:app/pages/edit-board
+                #:make-edit-board-page))
 (in-package #:app/app)
 
 
@@ -68,6 +72,10 @@
               (make-user-switch-page)))
   ("/kb" (make-page-frame
           (app/pages/kb::make-kb-widget)))
+  ("/boards" (make-page-frame
+              (make-boards-list-page)))
+  ("/boards/\\d+/edit" (make-page-frame
+                        (make-edit-board-page)))
   ("/chats" (make-page-frame
              (app/pages/chats::make-chats-widget)))
   ("/playground" (make-page-frame
