@@ -54,7 +54,10 @@
                         (append-data list (list obj))
                         (reblocks/widget:update list)
                         (reblocks/widget:update form)))
-    (render list)
-    (when (hr-p (get-current-user))
-      (render form))))
+    (with-html
+      (:div :class "flex flex-col gap-8"
+            (render list)
+            (when (hr-p (get-current-user))
+              (:div :class "flex justify-center"
+                    (render form)))))))
 

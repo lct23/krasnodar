@@ -8,11 +8,14 @@
   (:import-from #:app/pages/utils
                 #:title)
   (:import-from #:app/models/knowledge
+                #:knownledge-title
                 #:get-knowledge)
   (:import-from #:app/widgets/edit-knowledge-form
                 #:make-edit-knowledge-form-widget)
   (:import-from #:reblocks/request
-                #:get-path))
+                #:get-path)
+  (:import-from #:serapeum
+                #:fmt))
 (in-package #:app/pages/edit-knowledge)
 
 
@@ -30,8 +33,6 @@
     (let* ((knowledge (get-knowledge knowledge-id))
            (form (make-edit-knowledge-form-widget knowledge)))
 
-      (title "Редактирование знания")
-
-      ;; (title (fmt "Редактирование знания \"~A\""
-      ;;             (board-title board)))
+      (title (fmt "Редактирование знания \"~A\""
+                  (knownledge-title knowledge)))
       (render form))))

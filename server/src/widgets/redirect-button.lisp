@@ -17,13 +17,13 @@
   ())
 
 
-(defun redirect-button (content url)
+(defun redirect-button (content url &key (class app/widgets/utils::*button-classes*))
   (reblocks-ui2/buttons/button:button content
                                       :widget-class 'redirect-button-widget
                                       :on-click (lambda (&rest rest)
                                                   (declare (ignore rest))
                                                   (redirect url))
-                                      :class app/widgets/utils::*button-classes*))
+                                      :class class))
 
 
 ;; (defmethod reblocks/widget:get-css-classes ((widget redirect-button-widget))

@@ -25,7 +25,11 @@
   (:import-from #:mito
                 #:object-id)
   (:import-from #:app/widgets/redirect-button
-                #:redirect-button))
+                #:redirect-button)
+  (:import-from #:app/widgets/utils
+                #:*dangerous-button-classes*)
+  (:import-from #:reblocks-ui2/containers/row
+                #:make-row-widget))
 (in-package #:app/widgets/knowledge-list)
 
 
@@ -44,7 +48,14 @@
                                        "Без названия"
                                        title))))
     (column "Действия" :getter (lambda (obj)
-                                 (redirect-button "Редактировать"
-                                                  (fmt "/kb/~A/edit"
-                                                       (object-id obj))))))
+                                 (make-row-widget
+                                  (list
+                                   (redirect-button "Редактировать"
+                                                    (fmt "/kb/~A/edit"
+                                                         (object-id obj)))
+                                   (redirect-button "Удалить"
+                                                    (fmt "/kb/~A/del"
+                                                         (object-id obj))
+                                                    :class *dangerous-button-classes*))
+                                  :classes "gap-4"))))
    (get-knowledges)))

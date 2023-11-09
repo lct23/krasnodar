@@ -42,7 +42,7 @@
            :on-click (lambda (&rest rest)
                        (declare (ignore rest))
                        (let ((obj (create-knowledge)))
-                         (redirect (fmt "/kb/~A"
+                         (redirect (fmt "/kb/~A/edit"
                                         (object-id obj)))))
            :class *button-classes*)))
 

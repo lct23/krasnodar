@@ -54,7 +54,9 @@
   (:import-from #:app/pages/edit-board
                 #:make-edit-board-page)
   (:import-from #:app/pages/edit-knowledge
-                #:make-edit-knowledge-page))
+                #:make-edit-knowledge-page)
+  (:import-from #:app/pages/del-knowledge
+                #:make-del-knowledge-page))
 (in-package #:app/app)
 
 
@@ -77,6 +79,8 @@
           (make-kb-widget)))
   ("/kb/\\d+/edit" (make-page-frame
                     (make-edit-knowledge-page)))
+  ("/kb/\\d+/del" (make-page-frame
+                   (make-del-knowledge-page)))
   ("/boards" (make-page-frame
               (make-boards-list-page)))
   ("/boards/\\d+/edit" (make-page-frame

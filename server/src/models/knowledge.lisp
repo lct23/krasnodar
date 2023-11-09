@@ -1,6 +1,7 @@
 (uiop:define-package #:app/models/knowledge
   (:use #:cl)
   (:import-from #:mito
+                #:object-id
                 #:select-dao)
   (:import-from #:app/models/department
                 #:department)
@@ -53,6 +54,12 @@
                      :department department
                      :document document
                      :questionnaire questionnaire)))
+
+
+(defun delete-knowledge (knowledge)
+  (let ((knowledge-id (object-id knowledge)))
+    (log:warn "Deleting knowledge" knowledge-id)
+    (mito:delete-dao knowledge)))
 
 
 (defun get-knowledge (id)
