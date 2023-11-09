@@ -92,10 +92,6 @@
                             :src url))))
            (:td :class cell-classes
                 (:span :class span-classes
-                       "Email")
-                (reblocks-auth/models:get-email user))
-           (:td :class cell-classes
-                (:span :class span-classes
                        "Имя")
                 (user-name user))
            (:td :class cell-classes
@@ -137,7 +133,6 @@
       (:table :class "border-collapse w-full"
               (:thead
                (:tr (:th :class header-classes "Фото")
-                    (:th :class header-classes "Email")
                     (:th :class header-classes "Имя")
                     (:th :class header-classes "Отдел")
                     (:th :class header-classes "Должность")
