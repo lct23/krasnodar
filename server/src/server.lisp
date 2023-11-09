@@ -77,7 +77,7 @@
     (when postgres-certs-file
       (cl+ssl:ssl-load-global-verify-locations postgres-certs-file)))
 
-  (setf reblocks/variables:*pages-expire-in* (* 10 60))
+  (setf reblocks/variables:*pages-expire-in* (* 24 60 60))
   (setf reblocks/variables:*max-pages-per-session* 10)
 
   (setf *current-theme*
