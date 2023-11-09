@@ -13,7 +13,10 @@
                 #:get-departments
                 #:department-title)
   (:import-from #:reblocks-ui/form
-                #:with-html-form))
+                #:with-html-form)
+  (:import-from #:app/widgets/utils
+                #:submit-button
+                #:text-input))
 (in-package #:app/widgets/departments-list)
 
 
@@ -84,10 +87,8 @@
              (reblocks/widget:update widget))))
     
     (with-html-form (:post #'add-department
-                     :class "w-full my-8 flex justify-center")
-      (:input :name "title"
-              :class "w-1/3 px-2"
-              :placeholder "Название отдела")
-      (:button :name "submit"
-               :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
-               "Добавить"))))
+                     :class "w-full my-8 flex justify-center items-center")
+      (text-input "title"
+                  :label "Новый отдел"
+                  :placeholder "Название отдела")
+      (submit-button))))

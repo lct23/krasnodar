@@ -18,6 +18,10 @@
                 #:*dark-background*)
   (:import-from #:reblocks/html
                 #:with-html)
+  (:import-from #:app/models/roles
+                #:hr-p)
+  (:import-from #:reblocks-auth/models
+                #:get-current-user)
   (:export #:make-page-frame))
 (in-package #:app/widgets/frame)
 
@@ -208,27 +212,32 @@
            (title (text)
              (:h1 :class "font-bold mt-4 mb-2"
                   text)))
-      (:div :class
-            "w-30 border-r-0 border-blue-400 shadow-xl whitespace-nowrap min-h-screen"
-            (:div :class "border-b-2 p-4"
-                  (:a :href "/"
-                      "HR Zero"))
+      (let ((user (get-current-user)))
+        (:div :class
+              "w-30 border-r-0 border-blue-400 shadow-xl whitespace-nowrap min-h-screen"
+              (:div :class "border-b-2 p-4"
+                    (:a :href "/"
+                        "HR Zero"))
 
-            (:div :class "py-4"
-                  (:ul
-                   (item "/" "Дашборд")
-                   (item "/kb" "База знаний")
-                   (item "/chats" "Чаты"))
-                 
-                  ;; (title "Мои задачи")
-                  ;; (:ul
-                  ;;  (item "/calendar" "Календарь")
-                  ;;  (item "/progress" "Мой прогресс"))
+              (:div :class "py-4"
+                    (:ul
+                     (item "/" "Дашборд")
+                     (item "/kb" "База знаний")
+                     (item "/chats" "Чаты"))
+                   
+                    ;; (title "Мои задачи")
+                    ;; (:ul
+                    ;;  (item "/calendar" "Календарь")
+                    ;;  (item "/progress" "Мой прогресс"))
 
-                  (title "Временные странички")
-                  
-                  (:ul
-                   (item "/departments" "Отделы")
-                   (item "/personal" "Сотрудники")
-                   (item "/playground" "Песочница")
-                   (item "/switch" "Переключить учётку")))))))
+                    (when (hr-p user)
+                      (title "HR")
+                      (:ul
+                       (item "/departments" "Отделы")
+                       (item "/personal" "Сотрудники")))
+
+                    (title "Временные странички")
+                   
+                    (:ul
+                     (item "/playground" "Песочница")
+                     (item "/switch" "Переключить учётку"))))))))

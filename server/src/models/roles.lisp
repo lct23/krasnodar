@@ -1,20 +1,22 @@
 (uiop:define-package #:app/models/roles
   (:use #:cl)
   (:import-from #:app/models/user
+                #:user-department
                 #:user-roles
                 #:user)
   (:import-from #:mito
-                #:object-id))
+                #:object-id)
+  (:import-from #:app/models/department
+                #:department-title))
 (in-package #:app/models/roles)
 
 
 (defun hr-p (user)
-  (check-type user user)
-  (not
-   (null
-    (position "hr"
-              (user-roles user)
-              :test 'string-equal))))
+  (check-type user (or null user))
+  (when user
+    (let ((department (user-department user)))
+      (string-equal (department-title department)
+                    "hr"))))
 
 
 (defun give-a-role (user role)
