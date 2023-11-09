@@ -75,21 +75,7 @@
 (defmethod render ((widget frame-widget))
   (with-html
     (:raw (make-yandex-metrika-code))
-    (:header
-     ;; (:div :class "navbar"
-     ;;       (:div :class "main-logo"
-     ;;             (:div :class "title"
-     ;;                   (:a :href "/"
-     ;;                       "Example")))
-     ;;       (:div :class "right-block"
-     ;;             ;; Profile icon
-     ;;             (if avatar-url
-     ;;                 (:img :class "user-icon"
-     ;;                       :src avatar-url)
-     ;;                 (:a :class "login-link"
-     ;;                     :href "/login"
-     ;;                     "Войти"))))
-     )
+    (:header)
 
     ;; sidebar
     (render-sidebar)
@@ -97,103 +83,15 @@
     (:div :class (if (widep widget)
                      "w-full px-8"
                      "w-full px-8 py-4"
-                     ;; "page-content"
                      )
-          (render (content widget)))
-
-    ;; (:div :class "footer"
-    ;;       (when (string-equal (reblocks/request:get-path)
-    ;;                           "/")
-    ;;         (:p :class "contacts"
-    ;;             "Если есть вопросы, пишите: "
-    ;;             (:a :href "https://t.me/svetlyak40wt"
-    ;;                 (:img :src "https://altezza-store.ru/images/telegram.png")))))
-    ))
+          (render (content widget)))))
 
 
 (defmethod reblocks/widget:get-css-classes ((widget frame-widget))
   (list "flex"))
 
 
-(defmethod get-dependencies ((widget frame-widget))
-  ;; (list*
-  ;;  (reblocks-lass:make-dependency
-  ;;    `(body
-  ;;      ;; :background ,*dark-background*
-  ;;      ;; :color ,*text-color*
-       
-  ;;      (.frame-widget
-  ;;       :display flex
-  ;;       :flex-direction column
-  ;;       :align-items center
-
-  ;;       (.navbar
-  ;;        :display flex
-  ;;        :justify-content space-between
-  ;;        :padding-left 1rem
-  ;;        :padding-right 1rem
-  ;;        (.main-logo
-  ;;         :display flex
-  ;;         :flex-direction column
-  ;;         :flex-grow 10
-  ;;         :text-align center
-  ;;         (a :color ,*text-color*)
-
-  ;;         (.title
-  ;;          :font-size 3rem
-  ;;          :font-weight bold))
-
-  ;;        (.user-icon
-  ;;         :width 32px
-  ;;         :height 32px
-  ;;         :margin-top 1rem)
-  ;;        ((:or .user-icon
-  ;;              .login-link)
-  ;;         :margin-left 3em))
-        
-  ;;       (.page-content
-  ;;        :width 80%
-  ;;        :margin-left auto
-  ;;        :margin-right auto)
-        
-  ;;       (.wide-page-content
-  ;;        :width 100%)
-        
-  ;;       (header
-  ;;        :width 100%
-  ;;        (.main-menu :display flex
-  ;;                    :align-items center
-  ;;                    (a :margin-right 1rem))
-         
-  ;;        (input
-  ;;         :margin 0))
-
-  ;;       (.footer
-  ;;        (.contacts
-  ;;         :margin-bottom 7rem
-  ;;         (img
-  ;;          :height 1em)
-  ;;         (a :color ,*text-color*))))))
-
-  ;;  (reblocks-lass:make-dependency
-  ;;    `(:media "(max-width: 600px)"
-  ;;             (body
-  ;;              (.frame-widget
-  ;;               (.navbar
-  ;;                (.user-icon
-  ;;                 :width 32px
-  ;;                 :height 32px)
-  ;;                (.main-logo
-  ;;                 (.motto :display none)))
-
-  ;;               (.page-content
-  ;;                :width 100%
-  ;;                :margin 0
-  ;;                :padding-left 1rem
-  ;;                :padding-right 1rem)))))
-   
-  ;;  (call-next-method))
-  )
+(defmethod get-dependencies ((widget frame-widget)))
 
 
 (defun render-sidebar ()
