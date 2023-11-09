@@ -33,6 +33,7 @@
          (list (make-instance 'departments-list-widget)))
     (event-emitter:on :object-created form
                       (lambda (object)
+                        (declare (ignore object))
                         (update list)))
 
     (setf (slot-value list 'form)
@@ -48,9 +49,10 @@
                 (:span :class "lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
                        "Название")
                 (department-title department))
-           (:td :class cell-classes
-                (:span :class "lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase" "Действия")
-                "")))))
+           ;; (:td :class cell-classes
+           ;;      (:span :class "lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase" "Действия")
+           ;;      "")
+           ))))
 
 (defmethod render ((widget departments-list-widget))
   (let ((header-classes
@@ -59,7 +61,8 @@
       (:table :class "border-collapse w-full"
               (:thead
                (:tr (:th :class header-classes "Название отдела")
-                    (:th :class header-classes "Действия")))
+                    ;; (:th :class header-classes "Действия")
+                    ))
               (:tbody
                (loop for department in (get-departments)
                      do (render-department department))))
