@@ -43,7 +43,9 @@
   (:import-from #:app/pages/learn
                 #:make-learn-page)
   (:import-from #:app/pages/user
-                #:make-user-page))
+                #:make-user-page)
+  (:import-from #:app/pages/user-switch
+                #:make-user-switch-page))
 (in-package #:app/app)
 
 
@@ -60,6 +62,8 @@
              (make-login-processor)))
   ("/logout" (make-page-frame
              (make-logout-processor)))
+  ("/switch" (make-page-frame
+              (make-user-switch-page)))
   ("/kb" (make-page-frame
           (app/pages/kb::make-kb-widget)))
   ("/chats" (make-page-frame

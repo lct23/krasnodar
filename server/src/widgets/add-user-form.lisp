@@ -164,9 +164,15 @@
       (let ((user (user widget)))
         (:div :class "flex gap-8"
               (:div :class "flex flex-col gap-4"
-                    (:img :src "https://placekitten.com/200/300")
-                    (:input :name "avatar-url"
-                            :placeholder "Путь до аватарки (позже надо сделать загрузку)"))
+                    (if user
+                        (:img :style "width: 200px"
+                              :src (user-avatar-url user))
+                        (:div :style "width: 200px;height: 200px" 
+                              :class "bg-gray-200"))
+
+                    (text-input "avatar-url"
+                                :placeholder "Путь до аватарки (позже надо сделать загрузку)"
+                                :value (user-avatar-url user)))
              
               (:div :class "w-full flex flex-col"
                     (text-input "email" :type "email"

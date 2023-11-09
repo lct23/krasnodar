@@ -210,7 +210,7 @@
       (:div :class "w-30 border-r-2 whitespace-nowrap min-h-screen"
             (:div :class "border-b-2 p-4"
                   (:a :href "/"
-                      "HR Flirt"))
+                      "HR Zero"))
 
             (:div :class "py-4"
                   (:ul
