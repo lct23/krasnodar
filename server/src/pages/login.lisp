@@ -19,7 +19,9 @@
                 #:render-email-input
                 #:form-css-classes
                 #:render-submit-button
-                #:request-code-form))
+                #:request-code-form)
+  (:import-from #:app/widgets/utils
+                #:*button-classes*))
 (in-package #:app/pages/login)
 
 
@@ -42,21 +44,13 @@
        :email (lambda (&rest args)
                 (declare (ignore args))
                 (show-popup popup))
-       :button-class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"))))
+       :button-class *button-classes*))))
 
 
 (defmethod render ((widget login-widget))
   (with-html-form (:post #'request-link)
     
     (:p "Fill me with code")))
-
-
-;; (defmethod get-dependencies ((widget login-widget))
-;;   (list*
-;;    (reblocks-lass:make-dependency
-;;      `(.login-widget
-;;        :color red))
-;;    (call-next-method)))
 
 
 (defwidget custom-login-form (request-code-form)
@@ -66,9 +60,11 @@
 (defmethod reblocks-auth:render-login-page ((app app/app::app) &key retpath)
   (with-html
     (:div :class "p-10"
-          (reblocks/widget:render
-           (make-instance 'custom-login-form
-                          :retpath retpath)))))
+          (:p "Вход доступен только по пригласительным ссылкам.")
+          ;; (reblocks/widget:render
+          ;;  (make-instance 'custom-login-form
+          ;;                 :retpath retpath))
+          )))
 
 (defmethod render-email-input ((widget custom-login-form))
   (with-html
