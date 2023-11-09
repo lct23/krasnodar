@@ -7,12 +7,10 @@
                 #:select-dao)
   (:import-from #:app/models/department
                 #:department)
-  (:import-from #:app/models/user
-                #:user)
   (:import-from #:sxql
                 #:where
                 #:order-by)
-  (:import-from #:models/app/knowledge
+  (:import-from #:app/models/knowledge
                 #:knowledge))
 (in-package #:app/models/board)
 

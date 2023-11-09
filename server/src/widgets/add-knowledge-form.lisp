@@ -19,7 +19,7 @@
                 #:create-board)
   (:import-from #:app/widgets/utils
                 #:*button-classes*)
-  (:import-from #:models/app/knowledge
+  (:import-from #:app/models/knowledge
                 #:create-knowledge))
 (in-package #:app/widgets/add-knowledge-form)
 

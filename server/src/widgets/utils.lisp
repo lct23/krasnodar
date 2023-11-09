@@ -7,7 +7,7 @@
                 #:get-departments)
   (:import-from #:mito
                 #:object-id)
-  (:import-from #:models/app/knowledge
+  (:import-from #:app/models/knowledge
                 #:knownledge-title
                 #:get-knowledges)
   (:import-from #:alexandria
@@ -48,7 +48,7 @@
 
 (defun text-input (name &key (type "text") placeholder label value)
   (with-html
-    (let ((input-id (symbol-name (gensym "dsd"))))
+    (let ((input-id (symbol-name (gensym "input"))))
       (:div :class "w-full"
             (when label
               (:label :for input-id
@@ -60,12 +60,7 @@
                           :id input-id
                           :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           :placeholder placeholder
-                          :value value))))
-    ;; (:input :name name
-    ;;         :type type
-    ;;         :class "border px-2 my-2"
-    ;;         :placeholder placeholder)
-    ))
+                          :value value))))))
 
 ;; (defun text-input (name &key (type "text") placeholder)
 ;;   (with-html

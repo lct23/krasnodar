@@ -5,9 +5,7 @@
   (:import-from #:mito
                 #:select-by-sql)
   (:import-from #:app/models/board
-                #:board)
-  (:import-from #:app/models/board-progress
-                #:board-progress))
+                #:board))
 (in-package #:app/models/user)
 
 

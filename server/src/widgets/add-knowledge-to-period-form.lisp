@@ -36,7 +36,7 @@
   (flet ((add-knowledge (&key knowledge-id &allow-other-keys)
            (log:error "Adding knowledge" knowledge-id)
            (let ((binding (app/models/board::bind-knowledge-to-period (period widget)
-                                                                      (models/app/knowledge::get-knowledge knowledge-id))))
+                                                                      (app/models/knowledge::get-knowledge knowledge-id))))
              (event-emitter:emit :object-created widget
                                  binding))))
     (with-html-form (:post #'add-knowledge)

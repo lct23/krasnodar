@@ -1,11 +1,9 @@
-(uiop:define-package #:models/app/knowledge
+(uiop:define-package #:app/models/knowledge
   (:use #:cl)
   (:import-from #:mito
                 #:select-dao)
   (:import-from #:app/models/department
                 #:department)
-  (:import-from #:app/models/user
-                #:user)
   (:import-from #:sxql
                 #:order-by)
   (:import-from #:app/models/document
@@ -13,10 +11,11 @@
                 #:create-document
                 #:document)
   (:import-from #:app/models/questionnaire
+                #:make-default-questionnaire
                 #:questionnaire-document
                 #:make-questionnaire
                 #:questionnaire))
-(in-package #:models/app/knowledge)
+(in-package #:app/models/knowledge)
 
 
 (defclass knowledge ()
@@ -49,7 +48,7 @@
                                     document)
                               (mito:save-dao questionnaire)
                               questionnaire)
-                            (make-default-questionnaire))))
+                            (make-default-questionnaire document))))
     (mito:create-dao 'knowledge
                      :department department
                      :document document

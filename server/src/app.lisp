@@ -1,6 +1,5 @@
 (uiop:define-package #:app/app
   (:use #:cl)
-  (:import-from #:reblocks)
   (:import-from #:reblocks-navigation-widget
                 #:defroutes)
   (:import-from #:reblocks-prometheus
@@ -40,7 +39,9 @@
   (:import-from #:app/pages/add-user
                 #:make-add-user-page)
   (:import-from #:app/pages/edit-user
-                #:make-edit-user-page))
+                #:make-edit-user-page)
+  (:import-from #:app/pages/learn
+                #:make-learn-page))
 (in-package #:app/app)
 
 
@@ -71,6 +72,8 @@
                     (make-add-user-page)))
   ("/personal/\\d+/edit" (make-page-frame
                          (make-edit-user-page)))
+  ("/learn/\\d+" (make-page-frame
+                  (make-learn-page)))
   ;; ("/" (make-page-frame
   ;;             (make-login-page)))
   ("/" (make-page-frame

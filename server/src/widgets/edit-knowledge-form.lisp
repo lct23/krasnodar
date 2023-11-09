@@ -7,7 +7,7 @@
                 #:with-html)
   (:import-from #:reblocks/dependencies
                 #:get-dependencies)
-  (:import-from #:models/app/knowledge
+  (:import-from #:app/models/knowledge
                 #:knowledge-questionnaire
                 #:knowledge-document
                 #:knowledge))

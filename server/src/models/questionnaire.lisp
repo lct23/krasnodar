@@ -60,6 +60,10 @@
     (values questions)))
 
 
+(defun get-possible-answer (id)
+  (mito:find-dao 'possible-answer
+                 :id id))
+
 (defun get-question-possible-answers (question)
   (check-type question question)
   (mito:retrieve-dao 'possible-answer

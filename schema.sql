@@ -163,6 +163,7 @@ CREATE TABLE period_progress (
 CREATE TABLE questionnaire_results (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     questionnaire_id BIGINT NOT NULL REFERENCES "questionnaire" ON DELETE CASCADE,
+    questionnaire_progress INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
@@ -184,7 +185,6 @@ CREATE TABLE period_knowledge_progress (
     period_progress_id BIGINT NOT NULL REFERENCES "period_progress" ON DELETE CASCADE,
     period_knowledge_id BIGINT NOT NULL REFERENCES "period_knowledge" ON DELETE CASCADE,
     questionnaire_results_id BIGINT NOT NULL REFERENCES "questionnaire_results" ON DELETE CASCADE,
-    questionnaire_progress INTEGER NOT NULL,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );

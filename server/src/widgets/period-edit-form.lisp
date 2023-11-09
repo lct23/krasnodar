@@ -17,7 +17,7 @@
                 #:make-add-knowledge-to-period-form-widget)
   (:import-from #:serapeum
                 #:soft-list-of)
-  (:import-from #:models/app/knowledge
+  (:import-from #:app/models/knowledge
                 #:knownledge-title)
   (:import-from #:event-emitter
                 #:event-emitter)

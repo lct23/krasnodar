@@ -4,8 +4,6 @@
                 #:select-dao)
   (:import-from #:app/models/department
                 #:department)
-  (:import-from #:app/models/user
-                #:user)
   (:import-from #:sxql
                 #:order-by))
 (in-package #:app/models/document)
@@ -25,19 +23,6 @@
                :initarg :department
                :accessor document-department))
   (:metaclass mito:dao-table-class))
-
-
-(defclass who-can-help ()
-  ((document :col-type document
-             :initform nil
-             :initarg :document
-             :reader document)
-   (person :col-type user
-           :initform nil
-           :initarg :person
-           :reader person))
-  (:metaclass mito:dao-table-class)
-  (:documentation "Описывает связь между документом и людьми, которые могут помочь разобраться в этой теме."))
 
 
 (defun create-document (&key (title "") department)
