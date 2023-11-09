@@ -210,7 +210,7 @@
                         :href path
                         title))))
            (title (text)
-             (:h1 :class "font-bold mt-4 mb-2"
+             (:h1 :class "font-bold mt-4 mb-2 ml-2 mr-2"
                   text)))
       (let ((user (get-current-user)))
         (:div :class
@@ -224,9 +224,7 @@
                       (user
                        (:ul
                         (item "/" "Дашборд")
-                        (item "/kb" "База знаний")
-                        ;; (item "/chats" "Чаты")
-                        )
+                        (item "/kb" "База знаний"))
                    
                        ;; (title "Мои задачи")
                        ;; (:ul
@@ -246,4 +244,6 @@
                         (item "/switch" "Переключить учётку")))
                       (t
                        (:ul
-                        (item "/" "Лэндинг"))))))))))
+                        (item "/" "Лэндинг")
+                        ;; TODO: убрать для прода
+                        (item "/switch" "Переключить учётку"))))))))))
