@@ -11,6 +11,7 @@
                 #:column
                 #:make-table)
   (:import-from #:app/models/board
+                #:board-department
                 #:board-title
                 #:get-boards)
   (:import-from #:app/widgets/redirect-button
@@ -18,7 +19,9 @@
   (:import-from #:serapeum
                 #:fmt)
   (:import-from #:mito
-                #:object-id))
+                #:object-id)
+  (:import-from #:app/models/department
+                #:department-title))
 (in-package #:app/widgets/boards-list)
 
 
@@ -35,6 +38,12 @@
    (make-table
     (list (column "Название"
                   :getter #'board-title)
+          (column "Отдел"
+                  :getter (lambda (board)
+                            (let ((department (board-department board)))
+                              (if department
+                                  (department-title department)
+                                  "Для всех отделов"))))
           (column "Действия"
                   :getter (lambda (board)
                             (redirect-button "Редактировать"
