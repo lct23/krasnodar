@@ -9,7 +9,9 @@
                 #:get-dependencies)
   (:import-from #:reblocks-ui2/tables/table
                 #:column
-                #:make-table))
+                #:make-table)
+  (:import-from #:app/pages/utils
+                #:title))
 (in-package #:app/pages/dashboard/hr)
 
 
@@ -22,6 +24,8 @@
 
 
 (defmethod render ((widget hr-dashboard-widget))
+  (title "Дашборд HR")
+
   (with-html
     ;; Статистика по кадрам
     (:div :class "flex size-xl"
@@ -39,14 +43,14 @@
 
     ;; А это статистика по прохождению онбординга
     (render (make-table (list (column "Этап")
-                               (column "1 день")
-                               (column "1 неделя")
-                               (column "1 месяц")
-                               (column "3 месяца")
-                               (column "6 месяцев")
-                               (column "12 месяцев")
-                               (column "18 месяцев")
-                               (column "24 месяца"))
+                              (column "1 день")
+                              (column "1 неделя")
+                              (column "1 месяц")
+                              (column "3 месяца")
+                              (column "6 месяцев")
+                              (column "12 месяцев")
+                              (column "18 месяцев")
+                              (column "24 месяца"))
                         (list (mapcar #'princ-to-string
                                       (list "Участников" 2 1 6 11 23 6 30 44))
                               (mapcar #'princ-to-string

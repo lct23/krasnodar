@@ -10,6 +10,7 @@
   (:import-from #:app/models/board-progress
                 #:user-progress)
   (:import-from #:app/models/user
+                #:user-start-work-at
                 #:user-name
                 #:get-user)
   (:import-from #:app/widgets/board-progress
@@ -17,7 +18,16 @@
   (:import-from #:app/pages/utils
                 #:title)
   (:import-from #:app/widgets/user
-                #:make-user-widget))
+                #:make-user-widget)
+  (:import-from #:reblocks-auth/models
+                #:get-current-user)
+  (:import-from #:local-time
+                #:+iso-8601-date-format+
+                #:format-timestring
+                #:timestamp>
+                #:now)
+  (:import-from #:serapeum
+                #:fmt))
 (in-package #:app/pages/user)
 
 
@@ -30,15 +40,24 @@
 
 
 (defmethod render ((widget user-dashboard-page))
-  (title "Дашборд")
+  (title "Дашборд сотрудника")
   
-  (let ((user (get-user 1)
-              ;; (reblocks-auth/models:get-current-user)
-              ))
+  (let ((user ;; (get-user 1)
+          (get-current-user)))
     (with-html
       (cond
         (user
-         (let ((progress (user-progress user)))
-           (render (make-board-progress-widget progress))))
+         (let ((progress (user-progress user))
+               (start-at (user-start-work-at user)))
+           (cond
+             (progress (render (make-board-progress-widget progress)))
+             (t
+              (cond
+                ((timestamp> start-at (now))
+                 (:p (fmt "Онбординг начнётся ~A, свяжитесь с HR."
+                          (format-timestring nil start-at
+                                             :format +iso-8601-date-format+))))
+                (t
+                 (:p "Онбординг должен был начаться, но что-то пошло не так, свяжитесь с HR.")))))))
         (t
-         (:p "План онбординга пока не назначен, свяжитесь с HR."))))))
+         (:p "Чтобы работать с системой, надо залогиниться."))))))

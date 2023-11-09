@@ -45,7 +45,9 @@
   (:import-from #:app/pages/user
                 #:make-user-page)
   (:import-from #:app/pages/user-switch
-                #:make-user-switch-page))
+                #:make-user-switch-page)
+  (:import-from #:app/pages/dashboard/common
+                #:make-dashboard-page))
 (in-package #:app/app)
 
 
@@ -82,13 +84,8 @@
                          (make-edit-user-page)))
   ("/learn/\\d+" (make-page-frame
                   (make-learn-page)))
-  ;; ("/" (make-page-frame
-  ;;             (make-login-page)))
   ("/" (make-page-frame
-        (make-hr-dashboard-widget)
-        ;; (make-landing-page)
-        ))
-  )
+        (make-dashboard-page))))
 
 
 (defmethod reblocks/dependencies:get-dependencies ((widget routes))
