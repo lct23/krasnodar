@@ -42,8 +42,6 @@
                 #:*select-box-classes*
                 #:label
                 #:department-select-box)
-  (:import-from #:reblocks-auth/providers/email/models
-                #:send-code)
   (:import-from #:reblocks-auth/models
                 #:get-email
                 #:create-social-user)
@@ -63,20 +61,10 @@
                 #:emptyp)
   (:import-from #:local-time
                 #:+iso-8601-date-format+
-                #:format-timestring))
+                #:format-timestring)
+  (:import-from #:app/emails/welcome
+                #:send-welcome-message))
 (in-package #:app/widgets/add-user-form)
-
-
-(defparameter *welcome-message*
-  (flet ((send-welcome-message (email url)
-         (resend:send ("HR Сервис <noreply@hrzero.ru>"
-                       email
-                       "Адаптация в компании, ссылка для входа")
-           (:p
-            ("Чтобы начать процесс адаптации, пройдите по [этой ссылке](~A)."
-             url url))
-           (:p "Ссылка действительна в течении часа."))))
-    (reblocks-auth/providers/email/resend::make-code-sender #'send-welcome-message)))
 
 
 (defwidget add-user-form-widget (event-emitter ui-widget)
@@ -148,8 +136,8 @@
              
              (when user-created
                ;; и отправим сотруднику email, если это новый сотрудник
-               (send-code email
-                          :send-callback *welcome-message*))
+               (send-welcome-message user))
+             
              (event-emitter:emit (if user-created
                                      :object-created
                                      :object-saved)

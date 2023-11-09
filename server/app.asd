@@ -14,3 +14,4 @@
 
 
 (register-system-packages "clack-handler-hunchentoot" '(#:clack.handler.hunchentoot))
+(register-system-packages "bordeaux-threads" '(#:bordeaux-threads-2))

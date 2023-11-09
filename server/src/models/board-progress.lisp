@@ -26,6 +26,7 @@
   (:import-from #:40ants-pg/transactions
                 #:with-transaction)
   (:import-from #:mito
+                #:select-by-sql
                 #:select-dao
                 #:object-id
                 #:find-dao
@@ -35,7 +36,17 @@
                 #:order-by)
   (:import-from #:local-time
                 #:timestamp>=
-                #:now))
+                #:now)
+  (:import-from #:log4cl-extras/error
+                #:with-log-unhandled)
+  (:import-from #:40ants-pg/connection
+                #:with-connection)
+  (:import-from #:reblocks-auth/models
+                #:get-email)
+  (:import-from #:bordeaux-threads-2
+                #:make-thread)
+  (:import-from #:app/emails/welcome
+                #:send-welcome-message))
 (in-package #:app/models/board-progress)
 
 
@@ -257,3 +268,64 @@
      WHERE qr.id = ?"
    (list (object-id questionnaire-results)
          (object-id questionnaire-results))))
+
+
+
+(defun find-users-to-assign-board ()
+  "Вощвращает пользователей без назначенного борда, но у которых подошло время выхода на работу."
+  (select-by-sql 'user
+                 "SELECT u.*
+                    FROM \"user\" as u
+               LEFT JOIN board_progress as bp ON u.id = bp.user_id
+WHERE bp.id IS NULL AND u.start_work_at < current_date + '1 day'::interval"))
+
+
+(defun find-board-for-user (user)
+  "Ищет подходящий план онбординга для сотрудника.
+   Если к отделу сотрудника привязан план, то вернёт его,
+   а нет - какой-то план который подходит всем."
+  (first
+   (select-by-sql 'board
+                  "select b.*
+                    from board as b
+               left join \"user\" as u using (department_id)
+                   where u.id = ? or u.id IS NULL
+                order by b.department_id
+                   limit 1"
+                  :binds (list (object-id user)))))
+
+
+(defun assign-boards-to-users ()
+  (with-transaction
+      (loop for user in (find-users-to-assign-board)
+            for user-id = (object-id user)
+            for board = (find-board-for-user user)
+            if board
+            do (assign-board user board)
+               (send-welcome-message user)
+            else
+            do (log:error "Unable to find suitable board for" user-id))))
+
+
+(defparameter *assigner-interval*
+  (* 15))
+
+
+(defvar *assigner-thread* nil)
+
+
+(defun boards-assigner ()
+  "Каждые 5 минут проверяет, не нужно ли назначить какому-нибудь сотруднику план адаптации.
+   Назначает и отправляет ссылку."
+  (loop do (ignore-errors
+            (with-log-unhandled ()
+              (with-connection ()
+                (assign-boards-to-users))))
+           (sleep *assigner-interval*)))
+
+
+(defun start-boards-assigner ()
+  (unless *assigner-thread*
+    (setf *assigner-thread*
+          (make-thread #'boards-assigner
+                       :name "Boards Assigner"))))
