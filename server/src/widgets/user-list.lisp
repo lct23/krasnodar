@@ -77,60 +77,112 @@
   (make-instance 'user-list-widget))
 
 
-(defun render-user (user &key show-controls)
-  (let ((cell-classes "w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static")
-        (span-classes "lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"))
-    (with-html
-      (:tr :class "bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
-           (:td :class cell-classes
-                (:span :class span-classes
-                       "Фото")
+;; (defun render-user (user &key show-controls)
+;;   (let ((cell-classes "w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static")
+;;         (span-classes "lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"))
+;;     (with-html
+;;       (:tr :class "bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
+;;            (:td :class cell-classes
+;;                 (:span :class span-classes
+;;                        "Фото")
+;;                 (let ((url (app/models/user::user-avatar-url user))
+;;                       (classes "w-20 h-20"))
+;;                   (if (or (null url)
+;;                           (string= url ""))
+;;                       (:img :class classes
+;;                             :src "https://placekitten.com/300/300")
+;;                       (:img :class classes
+;;                             :src url))))
+;;            (:td :class cell-classes
+;;                 (:span :class span-classes
+;;                        "Имя")
+;;                 (user-name user))
+;;            (:td :class cell-classes
+;;                 (:span :class span-classes
+;;                        "Отдел")
+;;                 (let ((is-boss (user-is-boss-p user))
+;;                       (title (department-title
+;;                               (user-department user))))
+;;                   (if is-boss
+;;                       (fmt "~A (начальник)" title)
+;;                       title)))
+;;            (:td :class cell-classes
+;;                 (:span :class span-classes
+;;                        "Должность")
+;;                 (app/models/user::user-position user))
+;;            (:td :class cell-classes
+;;                 (:span :class span-classes
+;;                        "Ментор")
+;;                 (cond
+;;                   ((user-is-mentor-p user)
+;;                    "Да")
+;;                   ;; Выведем имя ментора
+;;                   ((user-mentor user)
+;;                    (user-name
+;;                     (user-mentor user)))
+;;                   (t
+;;                    "")))
+;;            (when show-controls
+;;              (:td :class cell-classes
+;;                   (:span :class span-classes)
+;;                   (redirect-button "Открыть"
+;;                                    (fmt "/personal/~A"
+;;                                         (object-id user)))
+;;                   (redirect-button "Редактировать"
+;;                                    (fmt "/personal/~A/edit"
+;;                                         (object-id user)))))))))
+
+
+(defun render-user-card (user &key show-controls)
+  (with-html
+    (:div :class "bg-white shadow-lg rounded-lg p-4 mb-10 lg:mb-0 flex flex-col hover:shadow-xl hover:scale-105 max-w-1/2"
+          (:div :class "w-60 h-60 flex justify-center items-center"
                 (let ((url (app/models/user::user-avatar-url user))
-                      (classes "w-20 h-20"))
+                      (classes "w-full h-full rounded-full"))
                   (if (or (null url)
                           (string= url ""))
                       (:img :class classes
                             :src "https://placekitten.com/300/300")
                       (:img :class classes
                             :src url))))
-           (:td :class cell-classes
-                (:span :class span-classes
-                       "Имя")
-                (user-name user))
-           (:td :class cell-classes
-                (:span :class span-classes
-                       "Отдел")
-                (let ((is-boss (user-is-boss-p user))
-                      (title (department-title
-                              (user-department user))))
-                  (if is-boss
-                      (fmt "~A (начальник)" title)
-                      title)))
-           (:td :class cell-classes
-                (:span :class span-classes
-                       "Должность")
-                (app/models/user::user-position user))
-           (:td :class cell-classes
-                (:span :class span-classes
-                       "Ментор")
-                (cond
-                  ((user-is-mentor-p user)
-                   "Да")
-                  ;; Выведем имя ментора
-                  ((user-mentor user)
-                   (user-name
-                    (user-mentor user)))
-                  (t
-                   "")))
-           (when show-controls
-             (:td :class cell-classes
-                  (:span :class span-classes)
+          (:div :class "flex flex-col mt-4"
+                (:span :class "text-gray-800 font-bold uppercase mb-2" "Имя")
+                (:span :class "text-gray-800"
+                       (user-name user)))
+          (:div :class "flex flex-col mt-4"
+                (:span :class "text-gray-800 font-bold uppercase mb-2" "Отдел")
+                (:span :class "text-gray-800"
+                       (let ((is-boss (user-is-boss-p user))
+                             (title (department-title
+                                     (user-department user))))
+                         (if is-boss
+                             (fmt "~A (начальник)" title)
+                             title))))
+          (:div :class "flex flex-col mt-4"
+                (:span :class "text-gray-800 font-bold uppercase mb-2" "Должность")
+                (:span :class "text-gray-800"
+                       (app/models/user::user-position user)))
+          (:div :class "flex flex-col mt-4"
+                (:span :class "text-gray-800 font-bold uppercase mb-2" "Ментор")
+                (:span :class "text-gray-800"
+                       (cond
+                         ((user-is-mentor-p user)
+                          "Да")
+                         ;; Выведем имя ментора
+                         ((user-mentor user)
+                          (user-name
+                           (user-mentor user)))
+                         (t
+                          ""))))
+
+          (when show-controls
+            (:div :class "flex flex-col mt-4"
                   (redirect-button "Открыть"
                                    (fmt "/personal/~A"
                                         (object-id user)))
                   (redirect-button "Редактировать"
                                    (fmt "/personal/~A/edit"
-                                        (object-id user)))))))))
+                                        (object-id user))))))))
 
 
 (defmethod render ((widget user-list-widget))
@@ -140,15 +192,21 @@
           (and (get-current-user)
                (hr-p (get-current-user)))))
     (with-html
-      (:table :class "border-collapse w-full"
-              (:thead
-               (:tr (:th :class header-classes "Фото")
-                    (:th :class header-classes "Имя")
-                    (:th :class header-classes "Отдел")
-                    (:th :class header-classes "Должность")
-                    (:th :class header-classes "Ментор")
-                    (when show-controls
-                      (:th :class header-classes "Действия"))))
-              (:tbody
-               (loop for user in (get-all-users)
-                     do (render-user user :show-controls show-controls)))))))
+      ;; Users a a table
+      ;; (:table :class "border-collapse w-full"
+      ;;         (:thead
+      ;;          (:tr (:th :class header-classes "Фото")
+      ;;               (:th :class header-classes "Имя")
+      ;;               (:th :class header-classes "Отдел")
+      ;;               (:th :class header-classes "Должность")
+      ;;               (:th :class header-classes "Ментор")
+      ;;               (when show-controls
+      ;;                 (:th :class header-classes "Действия"))))
+      ;;         (:tbody
+      ;;          (loop for user in (get-all-users)
+      ;;                do (render-user user :show-controls show-controls))))
+
+      (:div :class "flex flex-wrap"
+            (loop for user in (get-all-users)
+                  do (render-user-card user
+                                       :show-controls show-controls))))))
