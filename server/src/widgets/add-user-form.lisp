@@ -8,6 +8,10 @@
   (:import-from #:reblocks/dependencies
                 #:get-dependencies)
   (:import-from #:reblocks-ui/form
+                #:get-field-errors-count
+                #:form-error-placeholder
+                #:form-error
+                #:field-error
                 #:with-html-form)
   (:import-from #:reblocks-ui2/widget
                 #:ui-widget)
@@ -18,6 +22,7 @@
                 #:department-title
                 #:get-departments)
   (:import-from #:app/models/user
+                #:user-start-work-at
                 #:user
                 #:user-mentor
                 #:get-user
@@ -29,6 +34,7 @@
                 #:user-name)
   (:import-from #:reblocks-auth/providers/email/resend)
   (:import-from #:app/widgets/utils
+                #:*button-classes*
                 #:board-select-box
                 #:mentor-select-box
                 #:checkbox
@@ -52,7 +58,12 @@
   (:import-from #:serapeum
                 #:fmt)
   (:import-from #:app/models/board-progress
-                #:board))
+                #:board)
+  (:import-from #:str
+                #:emptyp)
+  (:import-from #:local-time
+                #:+iso-8601-date-format+
+                #:format-timestring))
 (in-package #:app/widgets/add-user-form)
 
 
@@ -81,7 +92,30 @@
 
 
 (defmethod reblocks-ui2/widget:render ((widget add-user-form-widget) theme)
-  (flet ((add-user (&key email name department-id mentor-id position avatar-url is-mentor-p is-boss-p board-id &allow-other-keys)
+  (flet ((add-user (&key email name department-id start-work-at mentor-id position avatar-url is-mentor-p is-boss-p board-id &allow-other-keys)
+           ;; Валидация
+           (when (emptyp email)
+             (field-error "email"
+                          "Емейл должен быть заполнен"))
+           (when (emptyp name)
+             (field-error "name"
+                          "Имя должно быть заполнено"))
+           (when (emptyp position)
+             (field-error "position"
+                          "Должность должна быть заполнена"))
+           (cond
+             ((emptyp start-work-at)
+              (field-error "name"
+                           "Имя должно быть заполнено"))
+             (t
+              (handler-case (local-time:parse-timestring start-work-at)
+                (local-time:invalid-timestring ()
+                  (field-error "start-work-at"
+                               "Дата начала работы должна быть в формате: 2023-11-30")))))
+           
+           (unless (zerop (get-field-errors-count))
+             (form-error "Некоторые поля заполнены неверно"))
+           
            (let ((user (user widget))
                  (user-created nil))
              (cond
@@ -104,10 +138,12 @@
              (setf (user-name user) name
                    (user-avatar-url user) avatar-url
                    (user-department user) (get-department department-id)
+                   (user-start-work-at user) start-work-at
                    (user-mentor user) (get-user mentor-id)
                    (user-position user) position
                    (user-is-mentor-p user) (string-equal is-mentor-p "true")
                    (user-is-boss-p user) (string-equal is-boss-p "true"))
+
              (mito:save-dao user)
              
              (when user-created
@@ -149,6 +185,15 @@
                                                                      (object-id
                                                                       (user-department user))))
 
+                    (text-input "start-work-at"
+                                :placeholder "В формате: 2023-11-30"
+                                :label "Дата выхода на работу"
+                                :value (when user
+                                         (format-timestring
+                                          nil
+                                          (user-start-work-at user)
+                                          :format +iso-8601-date-format+)))
+
                     (mentor-select-box "mentor-id"
                                        :label "Ментор"
                                        :selected-mentor-id (when (and user
@@ -177,11 +222,17 @@
                        (:p (fmt "Сотрудник уже проходит онбординг: ~A"
                                 (board-title (board (user-progress user))))))
                       (t
-                       (board-select-box "board-id"
-                                         :label "Начать онбординг")))))
+                       (:span "")
+                       ;; Ручное назначение онбординга пока отключено,
+                       ;; решили сделать автоматическое назначение по крону:
+                       ;; (board-select-box "board-id"
+                       ;;                   :label "Начать онбординг")
+                       ))
+
+                    (form-error-placeholder)))
         (:div :class "flex justify-end mt-8"
               (:button :name "submit"
-                       :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+                       :class *button-classes*
                        (if user
                            "Сохранить"
                            "Добавить")))))))

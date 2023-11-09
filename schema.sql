@@ -15,6 +15,7 @@ CREATE TABLE "user" (
     avatar_url TEXT,
     can_be_mentor BOOLEAN NOT NULL DEFAULT FALSE,
     mentor_id BIGINT references "user" on delete set null,
+    start_work_at TIMESTAMPTZ,
     boss BOOLEAN NOT NULL DEFAULT FALSE,
     department_id BIGINT NOT NULL DEFAULT 1 references department on delete cascade,
     position TEXT NOT NULL DEFAULT 'employee',

@@ -28,6 +28,10 @@
                     :initarg :can-be-mentor
                     :accessor user-is-mentor-p
                     :documentation "Если True, значит чел руководитель может быть назначен в качестве ментора.")
+     (start-work-at :col-type (or :null :timestamptz)
+                    :initform nil
+                    :accessor user-start-work-at
+                    :documentation "День выхода на работу.")
      (mentor :col-type user
              :initform nil
              :initarg :mentor
