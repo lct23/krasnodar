@@ -308,7 +308,7 @@ WHERE bp.id IS NULL AND u.start_work_at < current_date + '1 day'::interval"))
 
 
 (defparameter *assigner-interval*
-  (* 15))
+  (* 5 60))
 
 
 (defvar *assigner-thread* nil)
