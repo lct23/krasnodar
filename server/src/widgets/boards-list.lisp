@@ -21,7 +21,11 @@
   (:import-from #:mito
                 #:object-id)
   (:import-from #:app/models/department
-                #:department-title))
+                #:department-title)
+  (:import-from #:app/widgets/utils
+                #:*dangerous-button-classes*)
+  (:import-from #:reblocks-ui2/containers/row
+                #:make-row-widget))
 (in-package #:app/widgets/boards-list)
 
 
@@ -46,8 +50,15 @@
                                   "Для всех отделов"))))
           (column "Действия"
                   :getter (lambda (board)
-                            (redirect-button "Редактировать"
-                                             (fmt "/boards/~A/edit"
-                                                  (object-id board))))))
+                            (make-row-widget
+                             (list
+                              (redirect-button "Редактировать"
+                                               (fmt "/boards/~A/edit"
+                                                    (object-id board)))
+                              (redirect-button "Удалить"
+                                               (fmt "/boards/~A/del"
+                                                    (object-id board))
+                                               :class *dangerous-button-classes*))
+                             :classes "gap-4"))))
     (get-boards))))
 

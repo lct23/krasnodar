@@ -56,7 +56,9 @@
   (:import-from #:app/pages/edit-knowledge
                 #:make-edit-knowledge-page)
   (:import-from #:app/pages/del-knowledge
-                #:make-del-knowledge-page))
+                #:make-del-knowledge-page)
+  (:import-from #:app/pages/del-board
+                #:make-del-board-page))
 (in-package #:app/app)
 
 
@@ -85,6 +87,8 @@
               (make-boards-list-page)))
   ("/boards/\\d+/edit" (make-page-frame
                         (make-edit-board-page)))
+  ("/boards/\\d+/del" (make-page-frame
+                       (make-del-board-page)))
   ("/chats" (make-page-frame
              (app/pages/chats::make-chats-widget)))
   ("/playground" (make-page-frame

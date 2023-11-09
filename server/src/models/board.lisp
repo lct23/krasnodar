@@ -11,7 +11,9 @@
                 #:where
                 #:order-by)
   (:import-from #:app/models/knowledge
-                #:knowledge))
+                #:knowledge)
+  (:import-from #:str
+                #:emptyp))
 (in-package #:app/models/board)
 
 
@@ -25,6 +27,13 @@
                :initarg :department
                :accessor board-department))
   (:metaclass mito:dao-table-class))
+
+
+(defmethod board-title :around ((widget board))
+  (let ((title (call-next-method)))
+    (if (emptyp title)
+        "Без названия"
+        title)))
 
 
 (defclass board-period ()
@@ -81,6 +90,11 @@
                          :from-day from
                          :to-day to))
     (values board)))
+
+(defun delete-board (board)
+  (let ((board-id (object-id board)))
+    (log:warn "Deleting board" board-id)
+    (mito:delete-dao board)))
 
 
 (defun get-boards ()
