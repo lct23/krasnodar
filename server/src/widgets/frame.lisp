@@ -22,6 +22,8 @@
                 #:hr-p)
   (:import-from #:reblocks-auth/models
                 #:get-current-user)
+  (:import-from #:str
+                #:starts-with-p)
   (:export #:make-page-frame))
 (in-package #:app/widgets/frame)
 
@@ -197,7 +199,9 @@
 (defun render-sidebar ()
   (with-html
     (flet ((item (path title)
-             (let* ((current (string-equal path (reblocks/request:get-path)))
+             (let* ((current (or (string-equal path (reblocks/request:get-path))
+                                 (starts-with-p (concatenate 'string path "/")
+                                                (reblocks/request:get-path))))
                     (active-item-class
                       "pl-4 p-1 mr-4 bg-blue-500 text-white rounded-e-full hover:bg-blue-600 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-blue-600")
                     (inactive-item-class
