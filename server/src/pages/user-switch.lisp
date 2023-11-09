@@ -70,6 +70,7 @@
            (declare (ignore rest))
            (let ((user (user widget)))
              (log:warn "Switching to" user)
+             (reblocks/session:reset)
              (setf (get-current-user)
                    user)
              (redirect "/"))))
