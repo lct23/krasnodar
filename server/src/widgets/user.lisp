@@ -83,7 +83,8 @@
     (let ((user (user widget)))
       (:div :class "flex gap-8"
             (:div :class "flex flex-col gap-4"
-                  (:img :src "https://placekitten.com/200/300"))
+                  (:img :style "width: 200px"
+                        :src (user-avatar-url user)))
              
             (:div :class "w-full flex flex-col gap-4"
                   (:div
