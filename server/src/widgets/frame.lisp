@@ -199,7 +199,11 @@
 "
                                ;; Старый класс
                                ;; "pl-4 p-1 mr-4 bg-pink-400 rounded-e-full"
-                               "pl-4 p-1 mr-4")))
+                               ;; Неактивное меню
+                               "pl-4 p-1 mr-4 bg-white text-black rounded-e-full hover:bg-white hover:text-black hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-white"
+                               ;; Старый класс
+                               ;; "pl-4 p-1 mr-4"
+                               )))
                (:li :class class
                     (:a :class "w-full"
                         :href path
@@ -207,7 +211,7 @@
            (title (text)
              (:h1 :class "font-bold mt-4 mb-2"
                   text)))
-      (:div :class "w-30 border-r-2 whitespace-nowrap min-h-screen"
+      (:div :class "w-30 border-r-0 border-blue-400 shadow-xl whitespace-nowrap min-h-screen"
             (:div :class "border-b-2 p-4"
                   (:a :href "/"
                       "HR Zero"))
@@ -228,4 +232,5 @@
                   (:ul
                    (item "/departments" "Отделы")
                    (item "/personal" "Сотрудники")
-                   (item "/playground" "Песочница")))))))
+                   (item "/playground" "Песочница")
+                   (item "/switch" "Переключить учётку")))))))
