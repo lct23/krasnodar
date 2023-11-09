@@ -30,7 +30,10 @@
 
 
 (defparameter *button-classes*
-  "whitespace-nowrap max-h-12 border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease-in-out select-none hover:bg-blue-600 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-blue-600")
+  "whitespace-nowrap max-h-12 border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease-in-out select-none
+   hover:bg-blue-600 hover:shadow-xl hover:scale-105 hover:ring-2 hover:ring-blue-600
+   focus:outline-none focus:shadow-outline
+   disabled:bg-gray-300 disabled:border-gray-400 disabled:ring-0 disabled:scale-100 disabled:shadow-none disabled:text-gray-800")
 
 (defparameter *dangerous-button-classes*
   (replace-all "blue-600" "red-600"
@@ -41,10 +44,12 @@
   "max-h-6 border border-green-500 bg-green-500 text-white rounded-md px-1 mx-2 transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline")
 
 
-(defun submit-button (&key (text "Добавить") (classes *button-classes*))
+(defun submit-button (&key (text "Добавить") (classes *button-classes*) disabled attrs)
   (with-html
     (:button :type "submit"
              :class classes
+             :disabled (not (null disabled))
+             :attrs attrs
              text)))
 
 (defun redirect-button (text url &key (classes *button-classes*))
@@ -59,7 +64,7 @@
         :class "flex flex-col items-center whitespace-nowrap h-40 w-40 border border-blue-500 bg-blue-500 text-white rounded-full m-2 transition duration-500 ease-in-out select-none hover:bg-blue-600 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-blue-600"
         (:div :class "text-9xl" "+"))))
 
-(defun text-input (name &key (type "text") placeholder label value)
+(defun text-input (name &key (type "text") placeholder label value attrs)
   (with-html
     (let ((input-id (symbol-name (gensym "input"))))
       (:div :class "w-full"
@@ -73,16 +78,9 @@
                           :id input-id
                           :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           :placeholder placeholder
+                          :attrs attrs
                           :value value)
                   (reblocks-ui/form:error-placeholder name))))))
-
-
-(defun text-area (name &key placeholder (rows 10))
-  (with-html
-    (:textarea :name name
-               :rows rows
-               :class "block p-2.5 my-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               :placeholder placeholder)))
 
 
 (defun label (text &key for-id)
@@ -90,6 +88,21 @@
     (:label :for for-id
             :class "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
             text)))
+
+
+(defun text-area (name &key placeholder (rows 10) value label attrs)
+  (with-html
+    (let ((input-id (symbol-name (gensym "input"))))
+      (when label
+        (label label
+               :for-id input-id))
+      (:textarea :id input-id
+                 :name name
+                 :rows rows
+                 :class "block p-2.5 my-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                 :attrs attrs
+                 :placeholder placeholder
+                 value))))
 
 (defparameter *checkbox-classes*
   "before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-pink-500 checked:bg-pink-500 checked:before:bg-pink-500 hover:before:opacity-10")

@@ -36,8 +36,12 @@
 (defmethod render ((widget user-page))
   (cl-ppcre:register-groups-bind (user-id)
       ("/personal/(\\d+)" (get-path))
-    (let* ((user (get-user user-id))
-           (widget (make-user-widget user)))
+    (let* ((user (get-user user-id)))
+      (cond
+        (user
+         (let ((widget (make-user-widget user)))
       
-      (title (user-name user))
-      (render widget))))
+           (title (user-name user))
+           (render widget)))
+        (t
+         (title "Сотрудник не найден."))))))

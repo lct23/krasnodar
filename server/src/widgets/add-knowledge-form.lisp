@@ -20,11 +20,15 @@
   (:import-from #:app/widgets/utils
                 #:*button-classes*)
   (:import-from #:app/models/knowledge
-                #:create-knowledge))
+                #:create-knowledge)
+  (:import-from #:event-emitter
+                #:event-emitter)
+  (:import-from #:reblocks-ui2/widget
+                #:ui-widget))
 (in-package #:app/widgets/add-knowledge-form)
 
 
-(defwidget add-knowledge-form-widget ()
+(defwidget add-knowledge-form-widget (event-emitter ui-widget)
   ())
 
 

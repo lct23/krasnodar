@@ -215,9 +215,12 @@
       (let ((user (get-current-user)))
         (:div :class
               "w-30 border-r-0 border-blue-400 shadow-xl whitespace-nowrap min-h-screen"
+
               (:div :class "border-b-2 p-4"
                     (:a :href "/"
-                        "HR Zero"))
+                        :class "text-4xl font-bold text-blue-700 hover:text-blue-500 transition-colors duration-500 animate-pulse"
+                        (:span :class "bg-gradient-to-r from-blue-500 to-blue-800 text-transparent bg-clip-text"
+                               "HR Zero")))
 
               (:div :class "py-4"
                     (cond

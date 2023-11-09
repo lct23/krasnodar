@@ -1,6 +1,7 @@
 (uiop:define-package #:app/widgets/edit-document-form
   (:use #:cl)
   (:import-from #:reblocks/widget
+                #:update
                 #:widget
                 #:render
                 #:defwidget)
@@ -44,7 +45,7 @@
 
 
 (defmethod render ((widget edit-document-form-widget))
-  (flet ((add-document (&rest rest &key title text department-id &allow-other-keys)
+  (flet ((save-document (&rest rest &key title text department-id &allow-other-keys)
            (log:info "Editing document with" title rest)
            (let* ((department (when (and department-id
                                          (not (string= department-id "")))
@@ -58,13 +59,25 @@
                    department)
              (mito:save-dao document)
              (event-emitter:emit :object-updated widget
-                                 document))))
-    (with-html-form (:post #'add-document
-                     :class "my-6")
-      (department-select-box "department-id"
-                             :allow-empty t
-                             :label "Отдел"
-                             :selected-department-id (mito:object-id (form-document widget)))
-      (text-input "title" :placeholder "Название документа")
-      (text-area "text" :placeholder "Текст документа.")
-      (submit-button))))
+                                 document)
+             (update widget))))
+    (let ((document (form-document widget))
+          (change-handler '(:|x-on:keyup| "$refs.button.disabled = false")))
+      (with-html-form (:post #'save-document
+                       :class "my-6")
+        (department-select-box "department-id"
+                               :allow-empty t
+                               :label "Отдел"
+                               :selected-department-id (object-id document))
+        (:div :attrs '(:x-data "{}")
+              (text-input "title"
+                          :placeholder "Название документа"
+                          :value (document-title document)
+                          :attrs change-handler)
+              (text-area "text" :placeholder "Текст документа в формате Markdown"
+                                :label "Текст документа"
+                                :value (document-text document)
+                                :attrs change-handler)
+              (submit-button :text "Сохранить"
+                             :disabled t
+                             :attrs '(:x-ref "button")))))))

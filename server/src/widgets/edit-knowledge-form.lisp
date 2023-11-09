@@ -10,7 +10,11 @@
   (:import-from #:app/models/knowledge
                 #:knowledge-questionnaire
                 #:knowledge-document
-                #:knowledge))
+                #:knowledge)
+  (:import-from #:app/widgets/edit-document-form
+                #:make-edit-document-form-widget)
+  (:import-from #:app/widgets/questionnairies
+                #:make-questionnaire-widget))
 (in-package #:app/widgets/edit-knowledge-form)
 
 
@@ -31,12 +35,12 @@
          (questionnaire (knowledge-questionnaire knowledge)))
     (with-html
       (when document
-        (:h1 :class "font-xl"
+        (:h1 :class "text-3xl"
              "Документ")
-        (render (app/widgets/edit-document-form::make-edit-document-form-widget document)))
+        (render (make-edit-document-form-widget document)))
 
       (when questionnaire
-        (:h1 :class "font-xl"
+        (:h1 :class "text-3xl"
              "Опрос")
-        (render (app/widgets/questionnairies::make-questionnaire-widget questionnaire))))))
+        (render (make-questionnaire-widget questionnaire))))))
 

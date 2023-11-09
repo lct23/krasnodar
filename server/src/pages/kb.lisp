@@ -14,7 +14,11 @@
   (:import-from #:app/models/roles
                 #:hr-p)
   (:import-from #:reblocks-auth/models
-                #:get-current-user))
+                #:get-current-user)
+  (:import-from #:app/widgets/knowledge-list
+                #:make-knowledge-list-widget)
+  (:import-from #:app/widgets/add-knowledge-form
+                #:make-add-knowledge-form-widget))
 (in-package #:app/pages/kb)
 
 
@@ -26,11 +30,25 @@
   (make-instance 'kb-widget))
 
 
+;; (defmethod render ((widget kb-widget))
+;;   (title "База знаний")
+  
+;;   (let ((form (app/widgets/new-document-form::make-new-document-form-widget))
+;;         (list (app/widgets/document-list::make-document-list-widget)))
+;;     (event-emitter:on :object-created form
+;;                       (lambda (obj)
+;;                         (append-data list (list obj))
+;;                         (reblocks/widget:update list)
+;;                         (reblocks/widget:update form)))
+;;     (render list)
+;;     (when (hr-p (get-current-user))
+;;       (render form))))
+
 (defmethod render ((widget kb-widget))
   (title "База знаний")
   
-  (let ((form (app/widgets/new-document-form::make-new-document-form-widget))
-        (list (app/widgets/document-list::make-document-list-widget)))
+  (let ((form (make-add-knowledge-form-widget))
+        (list (make-knowledge-list-widget)))
     (event-emitter:on :object-created form
                       (lambda (obj)
                         (append-data list (list obj))

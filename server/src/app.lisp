@@ -28,7 +28,8 @@
   (:import-from #:app/widgets/departments-list
                 #:make-departments-list-widget)
   (:import-from #:app/pages/chats)
-  (:import-from #:app/pages/kb)
+  (:import-from #:app/pages/kb
+                #:make-kb-widget)
   (:import-from #:app/pages/playground)
   (:import-from #:app/pages/dashboard/hr
                 #:make-hr-dashboard-widget)
@@ -51,7 +52,9 @@
   (:import-from #:app/pages/boards-list
                 #:make-boards-list-page)
   (:import-from #:app/pages/edit-board
-                #:make-edit-board-page))
+                #:make-edit-board-page)
+  (:import-from #:app/pages/edit-knowledge
+                #:make-edit-knowledge-page))
 (in-package #:app/app)
 
 
@@ -71,7 +74,9 @@
   ("/switch" (make-page-frame
               (make-user-switch-page)))
   ("/kb" (make-page-frame
-          (app/pages/kb::make-kb-widget)))
+          (make-kb-widget)))
+  ("/kb/\\d+/edit" (make-page-frame
+                    (make-edit-knowledge-page)))
   ("/boards" (make-page-frame
               (make-boards-list-page)))
   ("/boards/\\d+/edit" (make-page-frame
@@ -111,7 +116,11 @@
      ;; "https://cdn.tailwindcss.com" ;; В какой-то момент стал редиректить на самого себя, лучше явно указать версию
      "https://cdn.tailwindcss.com/3.3.5"
      ;; "https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"
-     :type :js)))
+     :type :js)
+   (make-dependency
+     "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+     :type :js
+     :defer t)))
 
 
 (defmethod init-page ((app app) url-path expire-at)
