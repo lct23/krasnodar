@@ -105,3 +105,7 @@
                (small-button "X"
                              :on-click #'remove-item)))))))
 
+
+(defmethod reblocks/widget:get-css-classes ((widget period-edit-form-widget))
+  (list* "bg-white hover:text-blue-500 shadow-lg rounded-lg p-8 mb-10 lg:mb-0 flex flex-col hover:shadow-xl hover:scale-105 max-w-6xl mx-auto"
+         (call-next-method)))
