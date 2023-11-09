@@ -173,7 +173,7 @@
                           (user-name
                            (user-mentor user)))
                          (t
-                          ""))))
+                          "Нет"))))
 
           (when show-controls
             (:div :class "flex flex-col mt-4"
