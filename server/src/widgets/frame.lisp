@@ -195,7 +195,10 @@
     (flet ((item (path title)
              (let* ((current (string-equal path (reblocks/request:get-path)))
                     (class (if current
-                               "pl-4 p-1 mr-4 bg-pink-400 rounded-e-full"
+                               "pl-4 p-1 mr-4 bg-blue-500 text-white rounded-e-full hover:bg-blue-600 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-blue-600
+"
+                               ;; Старый класс
+                               ;; "pl-4 p-1 mr-4 bg-pink-400 rounded-e-full"
                                "pl-4 p-1 mr-4")))
                (:li :class class
                     (:a :class "w-full"
