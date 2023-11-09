@@ -14,4 +14,4 @@
          title))
 
   (setf (reblocks/page:get-title)
-        (fmt "HR Flirt - ~A" title)))
+        (fmt "HR Zero - ~A" title)))
