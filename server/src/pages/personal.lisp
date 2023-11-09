@@ -12,7 +12,11 @@
   (:import-from #:app/widgets/utils
                 #:redirect-button)
   (:import-from #:app/pages/utils
-                #:title))
+                #:title)
+  (:import-from #:app/models/roles
+                #:hr-p)
+  (:import-from #:reblocks-auth/models
+                #:get-current-user))
 (in-package #:app/pages/personal)
 
 
@@ -31,7 +35,8 @@
     (:div :class "flex flex-col gap-8"
           (render (make-user-list-widget))
          
-          (:div :class "flex justify-end"
-                (redirect-button "Добавить сотрудника"
-                                 "/personal/add")))))
+          (when (hr-p (get-current-user))
+            (:div :class "flex justify-end"
+                  (redirect-button "Добавить сотрудника"
+                                   "/personal/add"))))))
 

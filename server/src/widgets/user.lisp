@@ -45,6 +45,7 @@
   (:import-from #:reblocks-auth/providers/email/models
                 #:send-code)
   (:import-from #:reblocks-auth/models
+                #:get-current-user
                 #:get-email
                 #:create-social-user)
   (:import-from #:mito
@@ -63,7 +64,9 @@
                 #:emptyp)
   (:import-from #:local-time
                 #:+iso-8601-date-format+
-                #:format-timestring))
+                #:format-timestring)
+  (:import-from #:app/models/roles
+                #:hr-p))
 (in-package #:app/widgets/user)
 
 
@@ -130,7 +133,9 @@
                   (when (user-progress user)
                     (:p (fmt "Сотрудник уже проходит онбординг: ~A"
                              (board-title (board (user-progress user))))))))
-      (:div :class "flex justify-end mt-8"
-            (app/widgets/utils::redirect-button "Редактировать"
-                                                (fmt "/personal/~A/edit"
-                                                     (object-id user)))))))
+      ;; Редактировать может только HR
+      (when (hr-p (get-current-user))
+        (:div :class "flex justify-end mt-8"
+              (app/widgets/utils::redirect-button "Редактировать"
+                                                  (fmt "/personal/~A/edit"
+                                                       (object-id user))))))))

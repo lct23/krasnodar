@@ -18,7 +18,11 @@
   (:import-from #:reblocks/request
                 #:get-path)
   (:import-from #:app/models/user
-                #:get-user))
+                #:get-user)
+  (:import-from #:reblocks-auth/models
+                #:get-current-user)
+  (:import-from #:app/models/roles
+                #:hr-p))
 (in-package #:app/pages/edit-user)
 
 
@@ -33,12 +37,17 @@
 (defmethod render ((widget edit-user-page))
   (title "Редактирование сотрудника")
 
-  (cl-ppcre:register-groups-bind (user-id)
-      ("/personal/(\\d+)/edit" (get-path))
-    (let* ((user (get-user user-id))
-           (form (make-add-user-form-widget :user user)))
-      (on :object-saved form
-          (lambda (user)
-            (declare (ignore user))
-            (redirect "/personal")))
-      (render form))))
+  (cond
+    ((hr-p (get-current-user))
+     (cl-ppcre:register-groups-bind (user-id)
+         ("/personal/(\\d+)/edit" (get-path))
+       (let* ((user (get-user user-id))
+              (form (make-add-user-form-widget :user user)))
+         (on :object-saved form
+             (lambda (user)
+               (declare (ignore user))
+               (redirect "/personal")))
+         (render form))))
+    (t
+     (with-html
+       (:p "Редактировать сотрудников может только HR.")))))

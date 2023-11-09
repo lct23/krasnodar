@@ -14,7 +14,11 @@
   (:import-from #:event-emitter
                 #:on)
   (:import-from #:app/widgets/add-user-form
-                #:make-add-user-form-widget))
+                #:make-add-user-form-widget)
+  (:import-from #:app/models/roles
+                #:hr-p)
+  (:import-from #:reblocks-auth/models
+                #:get-current-user))
 (in-package #:app/pages/add-user)
 
 
@@ -29,9 +33,15 @@
 (defmethod render ((widget add-user-page))
   (title "Добавить сотрудника")
 
-  (let ((form (make-add-user-form-widget)))
-    (on :object-created form
-        (lambda (user)
-          (declare (ignore user))
-          (redirect "/personal")))
-    (render form)))
+  ;; Редактировать может только HR
+  (cond
+    ((hr-p (get-current-user))
+     (let ((form (make-add-user-form-widget)))
+       (on :object-created form
+           (lambda (user)
+             (declare (ignore user))
+             (redirect "/personal")))
+       (render form)))
+    (t
+     (with-html
+       (:p "Добавлять сотрудников может только HR.")))))
