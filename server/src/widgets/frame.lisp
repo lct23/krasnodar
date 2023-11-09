@@ -194,16 +194,13 @@
   (with-html
     (flet ((item (path title)
              (let* ((current (string-equal path (reblocks/request:get-path)))
+                    (active-item-class
+                      "pl-4 p-1 mr-4 bg-blue-500 text-white rounded-e-full hover:bg-blue-600 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-blue-600")
+                    (inactive-item-class
+                      "pl-4 p-1 mr-4 bg-white text-black rounded-e-full hover:bg-white hover:text-blue-400 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-white")
                     (class (if current
-                               "pl-4 p-1 mr-4 bg-blue-500 text-white rounded-e-full hover:bg-blue-600 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-blue-600
-"
-                               ;; Старый класс
-                               ;; "pl-4 p-1 mr-4 bg-pink-400 rounded-e-full"
-                               ;; Неактивное меню
-                               "pl-4 p-1 mr-4 bg-white text-black rounded-e-full hover:bg-white hover:text-black hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-white"
-                               ;; Старый класс
-                               ;; "pl-4 p-1 mr-4"
-                               )))
+                               active-item-class
+                               inactive-item-class)))
                (:li :class class
                     (:a :class "w-full"
                         :href path
@@ -211,7 +208,8 @@
            (title (text)
              (:h1 :class "font-bold mt-4 mb-2"
                   text)))
-      (:div :class "w-30 border-r-0 border-blue-400 shadow-xl whitespace-nowrap min-h-screen"
+      (:div :class
+            "w-30 border-r-0 border-blue-400 shadow-xl whitespace-nowrap min-h-screen"
             (:div :class "border-b-2 p-4"
                   (:a :href "/"
                       "HR Zero"))
