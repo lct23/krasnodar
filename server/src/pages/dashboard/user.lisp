@@ -10,11 +10,14 @@
   (:import-from #:app/models/board-progress
                 #:user-progress)
   (:import-from #:app/models/user
+                #:user-name
                 #:get-user)
   (:import-from #:app/widgets/board-progress
                 #:make-board-progress-widget)
   (:import-from #:app/pages/utils
-                #:title))
+                #:title)
+  (:import-from #:app/widgets/user
+                #:make-user-widget))
 (in-package #:app/pages/user)
 
 

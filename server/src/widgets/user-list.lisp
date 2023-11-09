@@ -121,6 +121,9 @@
                    "")))
            (:td :class cell-classes
                 (:span :class span-classes)
+                (redirect-button "Открыть"
+                                 (fmt "/personal/~A"
+                                      (object-id user)))
                 (redirect-button "Редактировать"
                                  (fmt "/personal/~A/edit"
                                       (object-id user))))))))

@@ -41,7 +41,9 @@
   (:import-from #:app/pages/edit-user
                 #:make-edit-user-page)
   (:import-from #:app/pages/learn
-                #:make-learn-page))
+                #:make-learn-page)
+  (:import-from #:app/pages/user
+                #:make-user-page))
 (in-package #:app/app)
 
 
@@ -70,6 +72,8 @@
                 (make-personal-widget)))
   ("/personal/add" (make-page-frame
                     (make-add-user-page)))
+  ("/personal/\\d+" (make-page-frame
+                     (make-user-page)))
   ("/personal/\\d+/edit" (make-page-frame
                          (make-edit-user-page)))
   ("/learn/\\d+" (make-page-frame
