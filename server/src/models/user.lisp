@@ -63,11 +63,18 @@
    (find-class 'user)))
 
 
+(defun get-all-users ()
+  (select-by-sql 'user
+                 "SELECT *
+                    FROM \"user\"
+                ORDER BY name"))
+
 (defun get-all-mentors ()
   (select-by-sql 'user
                  "SELECT *
                     FROM \"user\"
-                   WHERE can_be_mentor"))
+                   WHERE can_be_mentor
+                ORDER BY name"))
 
 (defun get-user (id)
   (when (and id

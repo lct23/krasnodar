@@ -8,6 +8,7 @@
   (:import-from #:reblocks/dependencies
                 #:get-dependencies)
   (:import-from #:app/models/user
+                #:get-all-users
                 #:user-mentor
                 #:user-is-mentor-p
                 #:user-is-boss-p
@@ -15,8 +16,7 @@
                 #:user-name
                 #:user-roles)
   (:import-from #:reblocks-auth/models
-                #:get-current-user
-                #:get-all-users)
+                #:get-current-user)
   (:import-from #:app/models/department
                 #:department-title
                 #:deparment-title)
@@ -53,7 +53,7 @@
                                                      (declare (ignore user))
                                                      "")
                                            :align :right))
-   (reblocks-auth/models:get-all-users)
+   (get-all-users)
    :object-creator (make-add-user-form-widget)
    ;; (lambda (table-widget)
    ;;   (declare (ignore table-widget))
