@@ -141,12 +141,12 @@
 (defun period-knowledge-progress-status (obj)
   (check-type obj period-knowledge-progress)
   (cond
-    ((timestamp>= (now)
-                  (ends-at (period-progress obj)))
-     "Просрочено")
     ((not (zerop (questionnaire-results-progress
                   (questionnaire-results obj))))
      "Пройдено")
+    ((timestamp>= (now)
+                  (ends-at (period-progress obj)))
+     "Просрочено")
     (t
      "Ожидает")))
 
