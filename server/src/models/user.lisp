@@ -74,3 +74,8 @@
              (not (equal id "")))
     (mito:find-dao 'user
                    :id id)))
+
+
+(defun delete-user (user)
+  (log:warn "Deleting" user)
+  (mito:delete-dao user))

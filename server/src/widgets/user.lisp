@@ -22,6 +22,7 @@
                 #:department-title
                 #:get-departments)
   (:import-from #:app/models/user
+                #:delete-user
                 #:user-start-work-at
                 #:user
                 #:user-mentor
@@ -34,6 +35,9 @@
                 #:user-name)
   (:import-from #:reblocks-auth/providers/email/resend)
   (:import-from #:app/widgets/utils
+                #:*dangerous-button-classes*
+                #:submit-button
+                #:redirect-button
                 #:*button-classes*
                 #:board-select-box
                 #:mentor-select-box
@@ -66,7 +70,9 @@
                 #:+iso-8601-date-format+
                 #:format-timestring)
   (:import-from #:app/models/roles
-                #:hr-p))
+                #:hr-p)
+  (:import-from #:reblocks/response
+                #:redirect))
 (in-package #:app/widgets/user)
 
 
@@ -105,12 +111,13 @@
                    (label "Должность")
                    (user-position user))
 
-                  (:div
-                   (label "Дата выхода на работу")
-                   (format-timestring
-                    nil
-                    (user-start-work-at user)
-                    :format +iso-8601-date-format+))
+                  (when (user-start-work-at user)
+                    (:div
+                     (label "Дата выхода на работу")
+                     (format-timestring
+                      nil
+                      (user-start-work-at user)
+                      :format +iso-8601-date-format+)))
 
                   (when (and user
                              (user-mentor user))
@@ -136,6 +143,14 @@
       ;; Редактировать может только HR
       (when (hr-p (get-current-user))
         (:div :class "flex justify-end mt-8"
-              (app/widgets/utils::redirect-button "Редактировать"
-                                                  (fmt "/personal/~A/edit"
-                                                       (object-id user))))))))
+              (redirect-button "Редактировать"
+                               (fmt "/personal/~A/edit"
+                                    (object-id user)))
+              (flet ((on-delete (&rest rest)
+                       (declare (ignore rest))
+                       (delete-user user)
+                       (redirect "/personal")))
+                ;; Пока удаляем без подтверждения.
+                (with-html-form (:post #'on-delete)
+                  (submit-button :text "Удалить"
+                                 :classes *dangerous-button-classes*))))))))
