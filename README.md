@@ -10,14 +10,12 @@
 Для демо мы подняли тестовый стенд на одной виртуальной машине, за исключением ElasticSearch,
 который развёрнут в SberCloud.
 
-## Порты микросервисов
+## Порты
 
-* 10091 - images.lct23.dev.40ants.com
-* 10090 - lct-krasnodar.dev.40ants.com (фронт)
+* 10090 - hrzero.ru (фронт)
 
 ## Как обновить SSL сертификаты на стенде
 
 ```
-sudo certbot --nginx \
-    -d lct-krasnodar.dev.40ants.com
+sudo certbot --nginx -d hrzero.ru
 ```

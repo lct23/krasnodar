@@ -94,8 +94,8 @@
     (:p "Ссылка для входа была отправлена на ваш email.")))
 
 
-(define-code-sender send-code ("HR Сервис <noreply@lct-krasnodar.dev.40ants.com>" url :subject "Ссылка для входа на сайт")
-    (:p ("Чтобы войти на [lct-krasnodar.dev.40ants.com](~A), пройдите по [этой ссылке](~A)."
+(define-code-sender send-code ("HR Сервис <noreply@hrzero.ru>" url :subject "Ссылка для входа на сайт")
+    (:p ("Чтобы войти на [hrzero.ru](~A), пройдите по [этой ссылке](~A)."
        url
        url))
   (:p "Ссылка действительна в течении часа."))

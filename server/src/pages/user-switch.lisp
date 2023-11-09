@@ -48,21 +48,28 @@
 
 (defmethod render ((widget user-switch-page))
   (title "Переключалка учёток")
-  
-  (with-html
-    (:div :class "flex flex-col gap-8"
-          (:div
-           (:p "Эта страница сделана для удобства тестирования. Тут можно переключаться на пользователей с разными ролями, чтобы попробовать разный функционал сайта.")
-           (:p "Тут можно переключаться на пользователей с разными ролями, чтобы попробовать разный функционал сайта.")
-           (:p "После выбора пользователя вас \"залогинит\" под его учёткой и перекинет на дашборд."))
 
-          (:div :class "flex flex-col gap-4"
-                (render (make-user-switch-widget
-                         (get-user 32) "Сотрудник HR"))
-                (render (make-user-switch-widget
-                         (get-user 22) "Ментор"))
-                (render (make-user-switch-widget
-                         (get-user 23) "Новый сотрудник"))))))
+  ;; TODO: для прода это надо выставить в NIL
+  (let ((allow-for-anonymous t))
+    (with-html
+      (cond
+        ((or (get-current-user)
+             allow-for-anonymous)
+         (:div :class "flex flex-col gap-8"
+               (:div
+                (:p "Эта страница сделана для удобства тестирования. Тут можно переключаться на пользователей с разными ролями, чтобы попробовать разный функционал сайта.")
+                (:p "Тут можно переключаться на пользователей с разными ролями, чтобы попробовать разный функционал сайта.")
+                (:p "После выбора пользователя вас \"залогинит\" под его учёткой и перекинет на дашборд."))
+
+               (:div :class "flex flex-col gap-4"
+                     (render (make-user-switch-widget
+                              (get-user 32) "Сотрудник HR"))
+                     (render (make-user-switch-widget
+                              (get-user 22) "Ментор"))
+                     (render (make-user-switch-widget
+                              (get-user 23) "Новый сотрудник")))))
+        (t
+         (:p "Сорян, но тестовая переключалка учёток доступна только залогиновым пользователям."))))))
 
 
 (defmethod render ((widget user-switch-widget))

@@ -220,25 +220,30 @@
                         "HR Zero"))
 
               (:div :class "py-4"
-                    (:ul
-                     (item "/" "Дашборд")
-                     (item "/kb" "База знаний")
-                     ;; (item "/chats" "Чаты")
-                     )
+                    (cond
+                      (user
+                       (:ul
+                        (item "/" "Дашборд")
+                        (item "/kb" "База знаний")
+                        ;; (item "/chats" "Чаты")
+                        )
                    
-                    ;; (title "Мои задачи")
-                    ;; (:ul
-                    ;;  (item "/calendar" "Календарь")
-                    ;;  (item "/progress" "Мой прогресс"))
+                       ;; (title "Мои задачи")
+                       ;; (:ul
+                       ;;  (item "/calendar" "Календарь")
+                       ;;  (item "/progress" "Мой прогресс"))
 
-                    (when (hr-p user)
-                      (title "HR")
-                      (:ul
-                       (item "/departments" "Отделы")
-                       (item "/personal" "Сотрудники")))
+                       (when (hr-p user)
+                         (title "HR")
+                         (:ul
+                          (item "/departments" "Отделы")
+                          (item "/personal" "Сотрудники")))
 
-                    (title "Временные странички")
+                       (title "Временные странички")
                    
-                    (:ul
-                     (item "/playground" "Песочница")
-                     (item "/switch" "Переключить учётку"))))))))
+                       (:ul
+                        (item "/playground" "Песочница")
+                        (item "/switch" "Переключить учётку")))
+                      (t
+                       (:ul
+                        (item "/" "Лэндинг"))))))))))

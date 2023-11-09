@@ -53,7 +53,8 @@
              (progress (render (make-board-progress-widget progress)))
              (t
               (cond
-                ((timestamp> start-at (now))
+                ((and start-at
+                      (timestamp> start-at (now)))
                  (:p (fmt "Онбординг начнётся ~A, свяжитесь с HR."
                           (format-timestring nil start-at
                                              :format +iso-8601-date-format+))))

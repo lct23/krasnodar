@@ -142,7 +142,7 @@
            ;;   (render form))
 
            ;;  Тест просмотра документа
-           (render (app/widgets/document::make-document-widget 19))
+           ;; (render (app/widgets/document::make-document-widget 19))
 
            ;; (render (app/widgets/add-user-form::make-add-user-form-widget))
            )
@@ -150,19 +150,20 @@
            (:p ("Ты залогинен как ~A" (get-nickname user)))
            (:p ("[Выйти](/logout)."))
            
-           (cond
-             ((hr-p user)
-              (let* ((user-list (app/widgets/user-list::make-user-list-widget))
-                     (form (app/widgets/add-user-form::make-add-user-form-widget)))
-                (event-emitter:on :object-created form
-                                  (lambda (user)
-                                    (declare (ignore user))
-                                    (reblocks/widget:update user-list)
-                                    (reblocks/widget:update form)))
-                (render user-list)
-                (render form)))
-             (t
-              (:p "Разделы для не HR я пока не заверстал.")))))
+           ;; (cond
+           ;;   ((hr-p user)
+           ;;    (let* ((user-list (app/widgets/user-list::make-user-list-widget))
+           ;;           (form (app/widgets/add-user-form::make-add-user-form-widget)))
+           ;;      (event-emitter:on :object-created form
+           ;;                        (lambda (user)
+           ;;                          (declare (ignore user))
+           ;;                          (reblocks/widget:update user-list)
+           ;;                          (reblocks/widget:update form)))
+           ;;      (render user-list)
+           ;;      (render form)))
+           ;;   (t
+           ;;    (:p "Разделы для не HR я пока не заверстал.")))
+           ))
         ;; (:h1 "Header 1"
         ;;      (:h2 "Header 2"
         ;;           (:h3 "Header 3"

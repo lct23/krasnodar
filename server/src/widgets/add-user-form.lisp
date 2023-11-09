@@ -69,7 +69,7 @@
 
 (defparameter *welcome-message*
   (flet ((send-welcome-message (email url)
-         (resend:send ("HR Сервис <noreply@lct-krasnodar.dev.40ants.com>"
+         (resend:send ("HR Сервис <noreply@hrzero.ru>"
                        email
                        "Адаптация в компании, ссылка для входа")
            (:p

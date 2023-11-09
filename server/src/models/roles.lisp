@@ -15,8 +15,9 @@
   (check-type user (or null user))
   (when user
     (let ((department (user-department user)))
-      (string-equal (department-title department)
-                    "hr"))))
+      (when department
+        (string-equal (department-title department)
+                      "hr")))))
 
 
 (defun give-a-role (user role)
