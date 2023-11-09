@@ -37,7 +37,7 @@
            :on-click (lambda (&rest rest)
                        (declare (ignore rest))
                        (let ((board (create-board)))
-                         (redirect (fmt "/boards/~A"
+                         (redirect (fmt "/boards/~A/edit"
                                         (object-id board)))))
            :class *button-classes*)))
 

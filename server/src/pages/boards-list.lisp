@@ -8,7 +8,9 @@
   (:import-from #:app/pages/utils
                 #:title)
   (:import-from #:app/widgets/boards-list
-                #:make-boards-list-widget))
+                #:make-boards-list-widget)
+  (:import-from #:app/widgets/add-board-form
+                #:make-add-board-form-widget))
 (in-package #:app/pages/boards-list)
 
 
@@ -23,4 +25,8 @@
 (defmethod render ((widget boards-list-page))
   (title "Онбординги")
   
-  (render (make-boards-list-widget)))
+  (with-html
+    (:div :class "flex flex-col gap-8"
+          (render (make-boards-list-widget))
+          (:div :class "flex justify-end"
+                (render (make-add-board-form-widget))))))
