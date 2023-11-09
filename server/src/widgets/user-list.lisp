@@ -26,6 +26,7 @@
   (:import-from #:serapeum
                 #:fmt)
   (:import-from #:app/widgets/utils
+                #:large-add-button
                 #:redirect-button)
   (:import-from #:mito
                 #:object-id)
@@ -207,6 +208,12 @@
       ;;                do (render-user user :show-controls show-controls))))
 
       (:div :class "flex flex-wrap"
+            (when show-controls
+              (:div :class "w-60 flex flex-col items-center pt-10"
+                    (large-add-button "/personal/add")
+                    (:div :class "text-4xl text-center"
+                          "Добавьте нового сотрудника")))
+
             (loop for user in (get-all-users)
                   do (render-user-card user
                                        :show-controls show-controls))))))

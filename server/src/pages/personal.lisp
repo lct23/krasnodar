@@ -33,10 +33,5 @@
   
   (with-html
     (:div :class "flex flex-col gap-8"
-          (render (make-user-list-widget))
-         
-          (when (hr-p (get-current-user))
-            (:div :class "flex justify-end"
-                  (redirect-button "Добавить сотрудника"
-                                   "/personal/add"))))))
+          (render (make-user-list-widget)))))
 

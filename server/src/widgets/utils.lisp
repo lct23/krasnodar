@@ -47,11 +47,17 @@
              :class classes
              text)))
 
-(defun redirect-button (text url)
+(defun redirect-button (text url &key (classes *button-classes*))
   (with-html
     (:a :href url
-        :class *button-classes*
+        :class classes
         text)))
+
+(defun large-add-button (url)
+  (with-html
+    (:a :href url
+        :class "flex flex-col items-center whitespace-nowrap h-40 w-40 border border-blue-500 bg-blue-500 text-white rounded-full m-2 transition duration-500 ease-in-out select-none hover:bg-blue-600 hover:shadow-xl hover:scale-105 focus:outline-none focus:shadow-outline hover:ring-2 hover:ring-blue-600"
+        (:div :class "text-9xl" "+"))))
 
 (defun text-input (name &key (type "text") placeholder label value)
   (with-html
