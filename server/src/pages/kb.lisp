@@ -10,7 +10,11 @@
   (:import-from #:reblocks-ui2/tables/table
                 #:append-data)
   (:import-from #:app/pages/utils
-                #:title))
+                #:title)
+  (:import-from #:app/models/roles
+                #:hr-p)
+  (:import-from #:reblocks-auth/models
+                #:get-current-user))
 (in-package #:app/pages/kb)
 
 
@@ -33,5 +37,6 @@
                         (reblocks/widget:update list)
                         (reblocks/widget:update form)))
     (render list)
-    (render form)))
+    (when (hr-p (get-current-user))
+      (render form))))
 
