@@ -11,7 +11,8 @@
                 #:document-text
                 #:document-title
                 #:get-document)
-  (:import-from #:3bmd))
+  (:import-from #:app/utils
+                #:markdown-to-html))
 (in-package #:app/widgets/document)
 
 
@@ -32,10 +33,7 @@
            (markdown (document-text document)))
       (:h1 (document-title document))
       (:section
-       ;; TODO: Здесь надо встроить проверку документа по white-list,
-       ;; чтобы предотвратить XSS уязвимость в markdown документах.
-       (3bmd:parse-string-and-print-to-stream markdown
-                                              reblocks/html:*stream*)))))
+       (markdown-to-html markdown)))))
 
 
 (defmethod get-dependencies ((widget document-widget))

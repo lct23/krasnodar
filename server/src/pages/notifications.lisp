@@ -11,7 +11,6 @@
                 #:create-notifications-for-all-users)
   (:import-from #:app/models/user
                 #:user-name)
-  (:import-from #:3bmd)
   (:import-from #:serapeum
                 #:fmt)
   (:import-from #:app/pages/utils
@@ -34,6 +33,7 @@
   (:import-from #:local-time
                 #:format-timestring)
   (:import-from #:app/utils
+                #:markdown-to-html
                 #:+human-datetime-format+))
 (in-package #:app/pages/notifications)
 
@@ -98,7 +98,6 @@ color: blue;
                                                            "text-gray-800 font-bold"))
                                                  title))
                                     (:div :class "document-text"
-                                          (3bmd:parse-string-and-print-to-stream text
-                                                                                 reblocks/html:*stream*))))))
+                                          (markdown-to-html text))))))
               (t
                (:h1 "Пока нет уведомлений")))))))

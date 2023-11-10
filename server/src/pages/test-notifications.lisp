@@ -11,7 +11,6 @@
                 #:create-notifications-for-all-users)
   (:import-from #:app/models/user
                 #:user-name)
-  (:import-from #:3bmd)
   (:import-from #:serapeum
                 #:fmt)
   (:import-from #:app/pages/utils
@@ -19,7 +18,9 @@
   (:import-from #:reblocks-ui2/buttons/button
                 #:button)
   (:import-from #:app/widgets/utils
-                #:*dangerous-button-classes*))
+                #:*dangerous-button-classes*)
+  (:import-from #:app/utils
+                #:markdown-to-html))
 (in-package #:app/pages/test-notifications)
 
 
@@ -80,7 +81,6 @@ color: blue;
                                                          "text-red-400")
                                                 title))
                                     (:div :class "document-text"
-                                          (3bmd:parse-string-and-print-to-stream text
-                                                                                 reblocks/html:*stream*))))))
+                                          (markdown-to-html text))))))
               (t
                (:h1 "Пока нет уведомлений для отправки.")))))))
