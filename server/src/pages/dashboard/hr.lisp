@@ -11,7 +11,11 @@
                 #:column
                 #:make-table)
   (:import-from #:app/pages/utils
-                #:title))
+                #:title)
+  (:import-from #:app/analytics
+                #:get-stats-for-hr-dashboard)
+  (:import-from #:serapeum
+                #:fmt))
 (in-package #:app/pages/dashboard/hr)
 
 
@@ -43,23 +47,44 @@
                 (:img :src "https://placekitten.com/400/300"))
 
           ;; А это статистика по прохождению онбординга
-          (render (make-table (list (column "Этап")
-                                    (column "1 день")
-                                    (column "1 неделя")
-                                    (column "1 месяц")
-                                    (column "3 месяца")
-                                    (column "6 месяцев")
-                                    (column "12 месяцев")
-                                    (column "18 месяцев")
-                                    (column "24 месяца"))
-                              (list (mapcar #'princ-to-string
-                                            (list "Прошло" 2 1 6 11 23 6 30 44))
-                                    (mapcar #'princ-to-string
-                                            (list "Проходит" 2 1 6 11 23 6 30 44))
-                                    (mapcar #'princ-to-string
-                                            (list "Успех" "44%" "56%" "11%" "67%" "95%" "97%" "98%" "98%"))
-                                    (mapcar #'princ-to-string
-                                            (list "Провалы" 1 0 0 0 0 0 2 3))
-                                    (mapcar #'princ-to-string
-                                            (list "Задержки" 1 0 2 5 0 0 2 3))))))))
+          (let* ((data (get-stats-for-hr-dashboard))
+                 (period-titles (list "1 день"
+                                     "1 неделя"
+                                     "1 месяц"
+                                     "3 месяца"
+                                     "6 месяцев"
+                                     "12 месяцев"
+                                     "18 месяцев"
+                                     "24 месяца"))
+                 (columns (list* (column "Этап")
+                                 (mapcar #'column period-titles)))
+                 (data-by-title (loop with result = (make-hash-table :test 'equal)
+                                      for item in data
+                                      do (setf (gethash (app/analytics::period-title item) result)
+                                               item)
+                                      finally (return result))))
+            (flet ((make-row (title getter &key perc)
+                     "Возвращает списки типа:
+                      (list \"Прошло\" 2 1 6 11 23 6 30 44)"
+                     (list* title
+                            (loop for period-title in period-titles
+                                  for item = (gethash period-title data-by-title)
+                                  for value = (when item
+                                                (funcall getter item))
+                                  for processed-value = (or
+                                                         (if (and perc value)
+                                                             (fmt "~,1F%"
+                                                                  (float value))
+                                                             value)
+                                                         "-")
+                                  collect (if item
+                                              (princ-to-string processed-value)
+                                              "-")))))
+              (render (make-table columns
+                                  (list (make-row "Прошло" #'app/analytics::proshlo)
+                                        (make-row "Проходит" #'app/analytics::prohodit)
+                                        (make-row "Успех" #'app/analytics::avg-progress :perc t)
+                                        (make-row "Провалы" #'app/analytics::incorrect-answers)
+                                        (make-row "Отставания" #'app/analytics::delayed-answers)
+                                        (make-row "Просрочки" #'app/analytics::overdue-answers)))))))))
 
