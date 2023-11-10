@@ -11,6 +11,7 @@
                 #:board-period
                 #:board)
   (:import-from #:app/models/user
+                #:user-start-work-at
                 #:user-board
                 #:user)
   (:import-from #:app/models/knowledge
@@ -175,23 +176,23 @@
     (order-by :id)))
 
 
-(defun relative-to-absolute (num-days &key end-of-the-day)
+(defun relative-to-absolute (num-days &key (base-ts (local-time:now))
+                                           end-of-the-day)
   "Высчитывает реальную дату и время относительно текущей даты. Чтобы мы понимали когда дедлайн."
-  (let ((ts (local-time:now)))
-    (local-time:adjust-timestamp ts
-      (:set :hour (if end-of-the-day
-                      23
+  (local-time:adjust-timestamp base-ts
+    (:set :hour (if end-of-the-day
+                    23
+                    0))
+    (:set :minute (if end-of-the-day
+                      59
                       0))
-      (:set :minute (if end-of-the-day
-                        59
-                        0))
-      (:set :sec (if end-of-the-day
-                     59
-                     0))
-      (:set :nsec (if end-of-the-day
-                      999999999
-                      0))
-      (:offset :day num-days))))
+    (:set :sec (if end-of-the-day
+                   59
+                   0))
+    (:set :nsec (if end-of-the-day
+                    999999999
+                    0))
+    (:offset :day num-days)))
 
 
 (defun make-questionnaire-results (period-knowledge)
@@ -229,15 +230,18 @@
      (with-transaction
          (let* ((bp (create-dao 'board-progress
                                 :user user
-                                :board board)))
+                                :board board))
+                (starts-at (user-start-work-at user)))
            (loop for period in (board-periods board)
                  for pp = (create-dao 'period-progress
                                       :board-progress bp
                                       :title (period-title period)
                                       :starts-at (relative-to-absolute
-                                                  (period-from-day period))
+                                                  (period-from-day period)
+                                                  :base-ts starts-at)
                                       :ends-at (relative-to-absolute
                                                 (period-to-day period)
+                                                :base-ts starts-at
                                                 :end-of-the-day t))
                  do (loop for period-knowledge in (period-knowledges period)
                           for questionnaire-results = (make-questionnaire-results period-knowledge)

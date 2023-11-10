@@ -47,3 +47,10 @@
   (humanize-duration
    (timestamp-difference timestamp base-ts)
    :format-part #'humanize-duration/ru:format-part))
+
+
+(defun random-timestamp-between (from-ts to-ts)
+  (let ((duration (local-time:timestamp-difference to-ts from-ts)))
+    (local-time:adjust-timestamp from-ts
+      (:offset :sec (coerce (floor (random duration))
+                            'integer)))))

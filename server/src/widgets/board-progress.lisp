@@ -45,7 +45,8 @@
   (with-html
     (flet ((columns (not-started-yet)
              (list (column "Знание"
-                           :getter #'period-knowledge-progress-title)
+                           :getter #'period-knowledge-progress-title
+                           :classes (list "w-full"))
                    (column "Статус"
                            :getter #'period-knowledge-progress-status)
                    (column "Успех"
@@ -84,7 +85,8 @@
                                    (:span (fmt "Осталось ~A"
                                                (time-to ends-at))))
                                   (t
-                                   (:span (fmt "Дедлайн истёк ~A назад"
+                                   (:span :class "text-red-700"
+                                          (fmt "Дедлайн истёк ~A назад"
                                                (time-to now :base-ts ends-at))))))
                            (render (make-table (columns not-started-yet)
                                                progresses)))

@@ -163,18 +163,19 @@
                          (if is-boss
                              (fmt "~A (начальник)" title)
                              title))))
-          (:div :class "flex flex-col mt-2"
-                ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Ментор")
-                (:span :class "text-gray-800"
-                       (cond
-                         ((user-is-mentor-p user)
-                          "Да")
-                         ;; Выведем имя ментора
-                         ((user-mentor user)
-                          (user-name
-                           (user-mentor user)))
-                         (t
-                          "Нет"))))
+          ;; Решили пока убрать
+          ;; (:div :class "flex flex-col mt-2"
+          ;;       ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Ментор")
+          ;;       (:span :class "text-gray-800"
+          ;;              (cond
+          ;;                ((user-is-mentor-p user)
+          ;;                 "Да")
+          ;;                ;; Выведем имя ментора
+          ;;                ((user-mentor user)
+          ;;                 (user-name
+          ;;                  (user-mentor user)))
+          ;;                (t
+          ;;                 "Нет"))))
 
           (when show-controls
             (:div :class "flex flex mt-4 text-s"
