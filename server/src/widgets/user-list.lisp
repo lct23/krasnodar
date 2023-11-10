@@ -134,9 +134,10 @@
 ;;                                         (object-id user)))))))))
 
 
-(defun render-user-card (user &key show-controls)
+(defun render-user-card (user &key show-controls card-width)
   (with-html
     (:div :class "bg-white shadow-lg rounded-lg p-4 mb-10 lg:mb-0 flex flex-col hover:shadow-xl hover:scale-105 max-w-1/2"
+          :style card-width
           (:div :class "w-60 h-60 flex justify-center items-center"
                 (let ((url (app/models/user::user-avatar-url user))
                       (classes "w-full h-full rounded-full"))
@@ -146,23 +147,23 @@
                             :src "https://placekitten.com/300/300")
                       (:img :class classes
                             :src url))))
-          (:div :class "flex flex-col mt-4"
-                (:span :class "text-gray-800"
+          (:div :class "flex flex-col mt-2"
+                (:span :class "text-gray-800 font-bold text-xl"
                        (user-name user)))
-          (:div :class "flex flex-col mt-4"
+          (:div :class "flex flex-col mt-0"
                 ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Должность")
-                (:span :class "text-gray-800"
+                (:span :class "text-blue-500 whitespace-nowrap overflow-hidden"
                        (app/models/user::user-position user)))
-          (:div :class "flex flex-col mt-4"
+          (:div :class "flex flex-col mt-2"
                 ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Отдел")
-                (:span :class "text-gray-800"
+                (:span :class "text-gray-800 whitespace-nowrap overflow-hidden"
                        (let ((is-boss (user-is-boss-p user))
                              (title (department-title
                                      (user-department user))))
                          (if is-boss
                              (fmt "~A (начальник)" title)
                              title))))
-          (:div :class "flex flex-col mt-4"
+          (:div :class "flex flex-col mt-2"
                 ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Ментор")
                 (:span :class "text-gray-800"
                        (cond
@@ -186,11 +187,12 @@
 
 
 (defmethod render ((widget user-list-widget))
-  (let ((header-classes
-          "p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell")
+  (let (;; (header-classes
+        ;;   "p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell")
         (show-controls
           (and (get-current-user)
-               (hr-p (get-current-user)))))
+               (hr-p (get-current-user))))
+        (card-width "width: 310px"))
     (with-html
       ;; Users a a table
       ;; (:table :class "border-collapse w-full"
@@ -206,13 +208,15 @@
       ;;          (loop for user in (get-all-users)
       ;;                do (render-user user :show-controls show-controls))))
 
-      (:div :class "flex flex-wrap"
+      (:div :class "flex flex-wrap gap-4"
             (when show-controls
               (:div :class "w-60 flex flex-col items-center pt-10"
+                    :style card-width
                     (large-add-button "/personal/add")
-                    (:div :class "text-4xl text-center"
+                    (:div :class "text-xl text-center"
                           "Добавьте нового сотрудника")))
 
             (loop for user in (get-all-users)
                   do (render-user-card user
-                                       :show-controls show-controls))))))
+                                       :show-controls show-controls
+                                       :card-width card-width))))))
