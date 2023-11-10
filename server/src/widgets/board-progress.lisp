@@ -36,28 +36,34 @@
 
 (defmethod render ((widget board-progress-widget))
   (with-html
-    (loop for period in (get-periods (board-progress widget))
-          for progresses = (get-knowledge-progresses period)
-          when progresses
-          do (:h1 (period-title period))
-             (render (make-table
-                      (list (column "Знание"
-                                    :getter #'period-knowledge-progress-title)
-                            (column "Статус"
-                                    :getter #'period-knowledge-progress-status)
-                            (column "Успех"
-                                    :getter (lambda (obj)
-                                              (let ((value (period-knowledge-progress-percent obj)))
-                                                (if (zerop value)
-                                                    "-"
-                                                    (fmt "~A%" value)))))
-                            (column "Действия"
-                                    :getter (lambda (obj)
-                                              (let ((value (period-knowledge-progress-percent obj)))
-                                                (if (zerop value)
-                                                    (redirect-button "Изучить"
-                                                                     (fmt "/learn/~A"
-                                                                          (mito:object-id obj)))
-                                                    "")))))
-                      progresses)))))
+    (let ((columns
+            (list (column "Знание"
+                          :getter #'period-knowledge-progress-title)
+                  (column "Статус"
+                          :getter #'period-knowledge-progress-status)
+                  (column "Успех"
+                          :getter (lambda (obj)
+                                    (let ((value (period-knowledge-progress-percent obj)))
+                                      (if (zerop value)
+                                          "-"
+                                          (fmt "~A%" value)))))
+                  (column "Действия"
+                          :getter (lambda (obj)
+                                    (let ((value (period-knowledge-progress-percent obj)))
+                                      (if (zerop value)
+                                          (redirect-button "Изучить"
+                                                           (fmt "/learn/~A"
+                                                                (mito:object-id obj)))
+                                          "")))))))
+      (loop with has-progresses = nil
+            for period in (get-periods (board-progress widget))
+            for progresses = (get-knowledge-progresses period)
+            when progresses
+            do (setf has-progresses t)
+               (:h1 (period-title period))
+               (render (make-table columns
+                                   progresses))
+            finally (unless has-progresses
+                      (:div :class "text-xl font-bold text-center"
+                            "Поздравляем! Вы прошли все задачи онбординга!"))))))
 

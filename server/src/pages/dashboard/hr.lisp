@@ -46,9 +46,10 @@
                       (:img :src "https://storage.yandexcloud.net/hrzero-avatars/num-persons.jpeg")
                       (:div :class "text-center font-bold"
                             "Численность сотрудников"))
-                ;; (:img :src "https://placekitten.com/400/300")
-                ;; (:img :src "https://placekitten.com/400/300")
-                )
+                (:div :class "flex flex-col gap-2"
+                      (:img :src "https://storage.yandexcloud.net/hrzero-avatars/pie-chart.jpg")
+                      (:div :class "text-center font-bold"
+                            "Распределение онбордингов")))
 
           (:h1 :class "text-xl font-bold text-center"
                "Успешность прохождения онбординга")

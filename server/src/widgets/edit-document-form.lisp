@@ -53,8 +53,7 @@
                   (document (form-document widget)))
              (setf (document-title document)
                    title
-                   (normalize-markdown
-                    (document-text document))
+                   (document-text document)
                    text
                    (document-department document)
                    department)

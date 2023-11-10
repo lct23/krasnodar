@@ -93,8 +93,8 @@
                           "Должность должна быть заполнена"))
            (cond
              ((emptyp start-work-at)
-              (field-error "name"
-                           "Имя должно быть заполнено"))
+              (field-error "start-work-at"
+                           "Дата выхода должна быть заполнена"))
              (t
               (handler-case (local-time:parse-timestring start-work-at)
                 (local-time:invalid-timestring ()
