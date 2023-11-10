@@ -13,6 +13,7 @@
   (:import-from #:app/pages/utils
                 #:title)
   (:import-from #:app/analytics
+                #:period-title
                 #:get-stats-for-hr-dashboard)
   (:import-from #:serapeum
                 #:fmt))
@@ -62,12 +63,12 @@
                                       "6 месяцев"
                                       "12 месяцев"
                                       "18 месяцев"
-                                      "24 месяца"))
+                                      "24 месяцев"))
                  (columns (list* (column "Этап")
                                  (mapcar #'column period-titles)))
                  (data-by-title (loop with result = (make-hash-table :test 'equal)
                                       for item in data
-                                      do (setf (gethash (app/analytics::period-title item) result)
+                                      do (setf (gethash (period-title item) result)
                                                item)
                                       finally (return result))))
             (flet ((make-row (title getter &key perc)

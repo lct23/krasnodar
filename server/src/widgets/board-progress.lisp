@@ -68,6 +68,7 @@
             (loop with has-progresses = nil
                   and now = (now)
                   for period in (get-periods (board-progress widget))
+                  for title = (app/models/board-progress::period-title period)
                   for progresses = (get-knowledge-progresses period)
                   for ends-at = (ends-at period)
                   for starts-at = (starts-at period)
@@ -86,7 +87,8 @@
                                                (time-to ends-at))))
                                   (t
                                    (:span :class "text-red-700"
-                                          (fmt "Дедлайн истёк ~A назад"
+                                          (fmt "~A: Дедлайн истёк ~A назад"
+                                               title
                                                (time-to now :base-ts ends-at))))))
                            (render (make-table (columns not-started-yet)
                                                progresses)))
