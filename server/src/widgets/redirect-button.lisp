@@ -7,7 +7,8 @@
                 #:with-html)
   (:import-from #:reblocks/dependencies
                 #:get-dependencies)
-  (:import-from #:reblocks-ui2/buttons/button)
+  (:import-from #:reblocks-ui2/buttons/button
+                #:button)
   (:import-from #:reblocks/response
                 #:redirect))
 (in-package #:app/widgets/redirect-button)
@@ -17,13 +18,15 @@
   ())
 
 
-(defun redirect-button (content url &key (class app/widgets/utils::*button-classes*))
-  (reblocks-ui2/buttons/button:button content
-                                      :widget-class 'redirect-button-widget
-                                      :on-click (lambda (&rest rest)
-                                                  (declare (ignore rest))
-                                                  (redirect url))
-                                      :class class))
+(defun redirect-button (content url &key (class app/widgets/utils::*button-classes*)
+                                         disabled)
+  (button content
+          :widget-class 'redirect-button-widget
+          :on-click (lambda (&rest rest)
+                      (declare (ignore rest))
+                      (redirect url))
+          :class class
+          :disabled disabled))
 
 
 ;; (defmethod reblocks/widget:get-css-classes ((widget redirect-button-widget))
