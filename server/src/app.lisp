@@ -58,7 +58,11 @@
   (:import-from #:app/pages/del-knowledge
                 #:make-del-knowledge-page)
   (:import-from #:app/pages/del-board
-                #:make-del-board-page))
+                #:make-del-board-page)
+  (:import-from #:app/pages/test-notifications
+                #:make-test-notifications-page)
+  (:import-from #:app/pages/notifications
+                #:make-notifications-page))
 (in-package #:app/app)
 
 
@@ -74,9 +78,7 @@
   ("/login" (make-page-frame
              (make-login-processor)))
   ("/logout" (make-page-frame
-             (make-logout-processor)))
-  ("/switch" (make-page-frame
-              (make-user-switch-page)))
+              (make-logout-processor)))
   ("/kb" (make-page-frame
           (make-kb-widget)))
   ("/kb/\\d+/edit" (make-page-frame
@@ -89,8 +91,8 @@
                         (make-edit-board-page)))
   ("/boards/\\d+/del" (make-page-frame
                        (make-del-board-page)))
-  ("/chats" (make-page-frame
-             (app/pages/chats::make-chats-widget)))
+  ("/notifications" (make-page-frame
+                     (make-notifications-page)))
   ("/playground" (make-page-frame
                   (app/pages/playground::make-playground-widget)))
   ("/departments" (make-page-frame
@@ -102,9 +104,14 @@
   ("/personal/\\d+" (make-page-frame
                      (make-user-page)))
   ("/personal/\\d+/edit" (make-page-frame
-                         (make-edit-user-page)))
+                          (make-edit-user-page)))
   ("/learn/\\d+" (make-page-frame
                   (make-learn-page)))
+  ;; Временные странички, для демонстрации MVP:
+  ("/test-notifications" (make-page-frame
+                          (make-test-notifications-page)))
+  ("/switch" (make-page-frame
+              (make-user-switch-page)))
   ("/" (make-page-frame
         (make-dashboard-page))))
 

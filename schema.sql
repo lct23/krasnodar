@@ -189,3 +189,17 @@ CREATE TABLE period_knowledge_progress (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
+
+
+-- Уведомления
+
+CREATE TABLE notification (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES "user" ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    text TEXT NOT NULL,
+    critical boolean default false,
+    seen_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
