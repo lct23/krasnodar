@@ -96,7 +96,7 @@
                              for name = (user-name user)
                              unless (member user-id users-to-show
                                             :key #'first)
-                             do (render (make-user-switch-widget user name
+                             do (render (make-user-switch-widget user ""
                                                                  :on-switch #'on-switch))))))
           (t
            (:p "Сорян, но тестовая переключалка учёток доступна только залогиновым пользователям.")))))))
