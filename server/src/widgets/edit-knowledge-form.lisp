@@ -14,7 +14,9 @@
   (:import-from #:app/widgets/edit-document-form
                 #:make-edit-document-form-widget)
   (:import-from #:app/widgets/questionnairies
-                #:make-questionnaire-widget))
+                #:make-questionnaire-widget)
+  (:import-from #:app/models/roles
+                #:hr-p))
 (in-package #:app/widgets/edit-knowledge-form)
 
 
@@ -32,7 +34,13 @@
 (defmethod render ((widget edit-knowledge-form-widget))
   (let* ((knowledge (knowledge widget))
          (document (knowledge-document knowledge))
-         (questionnaire (knowledge-questionnaire knowledge)))
+         (questionnaire (knowledge-questionnaire knowledge))
+         (user (get-current-user))
+         (is-hr (hr-p user)))
+    
+    (unless is-hr
+      (reblocks/response:redirect "/"))
+    
     (with-html
       (when document
         (:h1 :class "text-3xl"
