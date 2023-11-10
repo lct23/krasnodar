@@ -42,20 +42,26 @@
                       "Менторов: 6"))
           ;; Тут будут графики
           (:div :class "flex gap-4"
-                (:img :src "https://placekitten.com/400/300")
-                (:img :src "https://placekitten.com/400/300")
-                (:img :src "https://placekitten.com/400/300"))
+                (:div :class "flex flex-col gap-2"
+                      (:img :src "https://storage.yandexcloud.net/hrzero-avatars/num-persons.jpeg")
+                      (:div :class "text-center font-bold"
+                            "Численность сотрудников"))
+                ;; (:img :src "https://placekitten.com/400/300")
+                ;; (:img :src "https://placekitten.com/400/300")
+                )
 
+          (:h1 :class "text-xl font-bold text-center"
+               "Успешность прохождения онбординга")
           ;; А это статистика по прохождению онбординга
           (let* ((data (get-stats-for-hr-dashboard))
                  (period-titles (list "1 день"
-                                     "1 неделя"
-                                     "1 месяц"
-                                     "3 месяца"
-                                     "6 месяцев"
-                                     "12 месяцев"
-                                     "18 месяцев"
-                                     "24 месяца"))
+                                      "1 неделя"
+                                      "1 месяц"
+                                      "3 месяца"
+                                      "6 месяцев"
+                                      "12 месяцев"
+                                      "18 месяцев"
+                                      "24 месяца"))
                  (columns (list* (column "Этап")
                                  (mapcar #'column period-titles)))
                  (data-by-title (loop with result = (make-hash-table :test 'equal)
