@@ -147,11 +147,14 @@
                       (:img :class classes
                             :src url))))
           (:div :class "flex flex-col mt-4"
-                (:span :class "text-gray-800 font-bold uppercase mb-2" "Имя")
                 (:span :class "text-gray-800"
                        (user-name user)))
           (:div :class "flex flex-col mt-4"
-                (:span :class "text-gray-800 font-bold uppercase mb-2" "Отдел")
+                ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Должность")
+                (:span :class "text-gray-800"
+                       (app/models/user::user-position user)))
+          (:div :class "flex flex-col mt-4"
+                ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Отдел")
                 (:span :class "text-gray-800"
                        (let ((is-boss (user-is-boss-p user))
                              (title (department-title
@@ -160,11 +163,7 @@
                              (fmt "~A (начальник)" title)
                              title))))
           (:div :class "flex flex-col mt-4"
-                (:span :class "text-gray-800 font-bold uppercase mb-2" "Должность")
-                (:span :class "text-gray-800"
-                       (app/models/user::user-position user)))
-          (:div :class "flex flex-col mt-4"
-                (:span :class "text-gray-800 font-bold uppercase mb-2" "Ментор")
+                ;; (:span :class "text-gray-800 font-bold uppercase mb-2" "Ментор")
                 (:span :class "text-gray-800"
                        (cond
                          ((user-is-mentor-p user)
@@ -177,7 +176,7 @@
                           "Нет"))))
 
           (when show-controls
-            (:div :class "flex flex-col mt-4"
+            (:div :class "flex flex mt-4 text-s"
                   (redirect-button "Открыть"
                                    (fmt "/personal/~A"
                                         (object-id user)))
