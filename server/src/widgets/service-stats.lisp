@@ -22,7 +22,10 @@
   (:import-from #:common/utils
                 #:encode-json)
   (:import-from #:str
-                #:replace-all))
+                #:replace-all)
+  (:import-from #:app/analytics
+                #:get-deps-users
+                #:get-user-growth))
 (in-package #:app/widgets/service-stats)
 
 (in-readtable pythonic-string-syntax)
@@ -34,46 +37,6 @@
 
 (defun make-service-stats-widget ()
   (make-instance 'service-stats-widget))
-
-
-(defun get-user-growth ()
-  (let ((rows (mito:retrieve-by-sql
-               "
-with timestamps as (
-     select * from generate_series(current_date - '1 year'::interval, current_date, '1 month'::interval) as ts
-), date_ranges as (
-    select substr(ts::text, 0, 8) as month,
-           date_trunc('month', ts) as month_start,
-           date_trunc('month', ts) + '1 month'::interval as month_end
-      from timestamps
-)
-select month,
-       count(*) filter (where u.start_work_at < r.month_start) as old_users,
-       count(*) filter (where u.start_work_at between r.month_start and r.month_end) as new_users
-  from \"user\" as u, date_ranges as r
-  group by month
-  order by month;
-")))
-    (loop for row in rows
-          collect (dict "month" (getf row :month)
-                        "old-users" (getf row :old-users)
-                        "new-users" (getf row :new-users)))))
-
-
-(defun get-deps-users ()
-  (dict "value" 10 "category" "Разработка")
-  (let ((rows (mito:retrieve-by-sql
-               "
-select d.title as category,
-       count(*) as value
-  from department as d
-  join \"user\" as u on u.department_id = d.id
- group by d.title
- order by d.title
-")))
-    (loop for row in rows
-          collect (dict "category" (getf row :category)
-                        "value" (getf row :value)))))
 
 
 (defparameter *init-charts* """
