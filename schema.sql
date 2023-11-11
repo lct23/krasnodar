@@ -132,6 +132,7 @@ CREATE TABLE game (
 );
 
 insert into game (title, widget_name, created_at, updated_at) values ('Запомни имена коллег', 'learn-names', now(), now());
+insert into game (title, widget_name, created_at, updated_at) values ('Угадай должность', 'guess-position', now(), now());
 
 -- Знания
 
