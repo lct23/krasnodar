@@ -94,10 +94,16 @@
                   (reblocks-ui/form:error-placeholder name))))))
 
 
-(defun label (text &key for-id)
+(defun label (text &key for-id (classes "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"))
   (with-html
     (:label :for for-id
-            :class "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+            :class classes
+            text)))
+
+(defun inline-label (text &key for-id (classes "block mb-2 font-medium text-gray-900 dark:text-gray-400"))
+  (with-html
+    (:label :for for-id
+            :class classes
             text)))
 
 

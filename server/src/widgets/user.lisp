@@ -35,6 +35,7 @@
                 #:user-name)
   (:import-from #:reblocks-auth/providers/email/resend)
   (:import-from #:app/widgets/utils
+                #:inline-label
                 #:*dangerous-button-classes*
                 #:submit-button
                 #:redirect-button
@@ -89,44 +90,46 @@
 
 (defmethod render ((widget user-widget))
   (with-html
-    (let ((user (user widget)))
+    (let ((user (user widget))
+          (field-group-classes "flex gap-2"))
       (:div :class "flex gap-8"
             (:div :class "flex flex-col gap-4"
                   (:img :style "width: 200px"
                         :src (user-avatar-url user)))
-             
+            
             (:div :class "w-full flex flex-col gap-4"
-                  (:div
-                   (label "Email")
-                   (get-email user))
-                  (:div
-                   (label "Имя")
-                   (user-name user))
-                  (:div
-                   (label "Отдел")
-                   (department-title
-                    (user-department user)))
+                  (:div :class field-group-classes
+                        (inline-label "Email")
+                        (get-email user))
+                  (:div :class field-group-classes
+                        (inline-label "Имя")
+                        (user-name user))
+                  (:div :class field-group-classes
+                        (inline-label "Отдел")
+                        (department-title
+                         (user-department user)))
 
-                  (:div
-                   (label "Должность")
-                   (user-position user))
+                  (:div :class field-group-classes
+                        (inline-label "Должность")
+                        (user-position user))
 
                   (when (user-start-work-at user)
-                    (:div
-                     (label "Дата выхода на работу")
-                     (format-timestring
-                      nil
-                      (user-start-work-at user)
-                      :format +iso-8601-date-format+)))
+                    (:div :class field-group-classes
+                          (inline-label "Дата выхода на работу")
+                          (format-timestring
+                           nil
+                           (user-start-work-at user)
+                           :format +iso-8601-date-format+)))
 
                   (when (and user
                              (user-mentor user))
-                    (:div
-                     (label "Имя ментора")
-                     (user-name
-                      (user-mentor user))))
+                    (:div :class field-group-classes
+                          (inline-label "Имя ментора")
+                          (user-name
+                           (user-mentor user))))
 
                   (:div :class "flex"
+                        :style "margin-left: -0.9rem"
                         (checkbox "is-boss-p"
                                   :label "Начальник"
                                   :checked (user-is-boss-p user)
