@@ -1,5 +1,9 @@
 (uiop:define-package #:app/widgets/utils
   (:use #:cl)
+  (:import-from #:reblocks-ui2/themes/api
+                #:*current-theme*)
+  (:import-from #:reblocks-ui2/themes/tailwind
+                #:make-tailwind-theme)
   (:import-from #:reblocks/html
                 #:with-html)
   (:import-from #:app/models/department
@@ -25,7 +29,9 @@
                 #:board-title
                 #:get-boards)
   (:import-from #:str
-                #:replace-all))
+                #:replace-all)
+  (:import-from #:reblocks-ui2/tables/themes/tailwind/table
+                #:*default-header-cell-styles*))
 (in-package #:app/widgets/utils)
 
 
@@ -279,3 +285,11 @@
            (update new-widget :inserted-after last-widget)
            (update ,parent-widget)))))
 
+
+(defun set-custom-reblocks-theme ()
+  (setf *current-theme*
+        (make-tailwind-theme))
+  
+  (setf *default-header-cell-styles*
+        "p-3 font-bold uppercase bg-gradient-to-r from-blue-500 to-blue-300 text-white border border-gray-300 hidden lg:table-cell")
+  (values))

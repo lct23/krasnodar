@@ -14,10 +14,8 @@
                 #:*translation-file-root*)
   (:import-from #:app/vars
                 #:resend-api-key)
-  (:import-from #:reblocks-ui2/themes/api
-                #:*current-theme*)
-  (:import-from #:reblocks-ui2/themes/tailwind
-                #:make-tailwind-theme)
+  (:import-from #:app/widgets/utils
+                #:set-custom-reblocks-theme)
   (:shadow #:restart)
   (:export #:start
            #:restart
@@ -80,8 +78,7 @@
   (setf reblocks/variables:*pages-expire-in* (* 24 60 60))
   (setf reblocks/variables:*max-pages-per-session* 10)
 
-  (setf *current-theme*
-        (make-tailwind-theme))
+  (set-custom-reblocks-theme)
 
   (reblocks/server:start :port port
 			 :interface interface

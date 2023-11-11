@@ -16,7 +16,11 @@
                 #:with-html-form)
   (:import-from #:app/widgets/utils
                 #:submit-button
-                #:text-input))
+                #:text-input)
+  (:import-from #:reblocks-ui2/tables/themes/tailwind/table
+                #:*default-header-cell-styles*)
+  (:import-from #:app/pages/utils
+                #:title))
 (in-package #:app/widgets/departments-list)
 
 
@@ -55,19 +59,21 @@
            ))))
 
 (defmethod render ((widget departments-list-widget))
-  (let ((header-classes
-          "p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"))
-    (with-html
-      (:table :class "border-collapse w-full"
-              (:thead
-               (:tr (:th :class header-classes "Название отдела")
-                    ;; (:th :class header-classes "Действия")
-                    ))
-              (:tbody
-               (loop for department in (get-departments)
-                     do (render-department department))))
+  (title "Отделы")
+  
+  (with-html
+    (:table :class "border-collapse w-full"
+            (:thead
+             (:tr (:th :class
+                       *default-header-cell-styles*
+                       "Название отдела")
+                  ;; (:th :class *default-header-cell-styles* "Действия")
+                  ))
+            (:tbody
+             (loop for department in (get-departments)
+                   do (render-department department))))
 
-      (render (form widget)))))
+    (render (form widget))))
 
 
 ;; (defmethod get-dependencies ((widget departments-list-widget))
