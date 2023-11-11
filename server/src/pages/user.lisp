@@ -25,7 +25,9 @@
   (:import-from #:app/models/roles
                 #:hr-p)
   (:import-from #:app/widgets/board-progress-for-hr
-                #:make-board-progress-widget-for-hr))
+                #:make-board-progress-widget-for-hr)
+  (:import-from #:app/models/board-progress
+                #:user-progress))
 (in-package #:app/pages/user)
 
 
@@ -49,11 +51,18 @@
            (with-html
              (:div :class "flex flex-col gap-8"
                    (render widget)
-                   (when (hr-p (get-current-user))
-                     (with-html
-                       (:div :class "flex flex-col gap-4"
-                             (:h1 :class "text-xl font-bold text-center"
-                                  "Прогресс по онбордингу")
-                             (render (make-board-progress-widget-for-hr user)))))))))
+                   (when (and (hr-p (get-current-user))
+                              )
+                     (cond
+                       ;; У текущего сотрудника начат онбординг
+                       ((user-progress user)
+                        (with-html
+                          (:div :class "flex flex-col gap-4"
+                                (:h1 :class "text-xl font-bold text-center"
+                                     "Прогресс по онбордингу")
+                                (render (make-board-progress-widget-for-hr user)))))
+                       (t
+                        (:div :class "text-xl font-bold text-center"
+                              "Онбординг пока не стартовал, потому что сотрудник пока не вышел на работу."))))))))
         (t
          (title "Сотрудник не найден."))))))
