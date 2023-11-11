@@ -36,7 +36,7 @@
 
 
 (defparameter *button-classes*
-  "whitespace-nowrap max-h-12 border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease-in-out select-none
+  "whitespace-nowrap max-h-10 border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 mx-2 transition duration-500 ease-in-out select-none
    hover:bg-blue-600 hover:shadow-xl hover:scale-105 hover:ring-2 hover:ring-blue-600
    focus:outline-none focus:shadow-outline
    disabled:bg-gray-300 disabled:border-gray-400 disabled:ring-0 disabled:scale-100 disabled:shadow-none disabled:text-gray-800")

@@ -21,7 +21,10 @@
                 #:render-submit-button
                 #:request-code-form)
   (:import-from #:app/widgets/utils
-                #:*button-classes*))
+                #:text-input
+                #:*button-classes*)
+  (:import-from #:app/pages/utils
+                #:title))
 (in-package #:app/pages/login)
 
 
@@ -58,27 +61,31 @@
 
 
 (defmethod reblocks-auth:render-login-page ((app app/app::app) &key retpath)
+  (title "Вход в систему")
   (with-html
-    (:div :class "p-10"
-          (:p "Вход доступен только по пригласительным ссылкам.")
-          ;; (reblocks/widget:render
-          ;;  (make-instance 'custom-login-form
-          ;;                 :retpath retpath))
-          )))
+    (:div :class "w-1/2 mx-auto mt-20 border rounded shadow-xl p-8 flex flex-col gap-8"
+          (:p :class "text-xl font-bold"
+              "Вход доступен только только для сотрудников.")
+          (:div :class "flex flex-col gap-4"
+                (:p "Введите свой email:")
+                (reblocks/widget:render
+                 (make-instance 'custom-login-form
+                                :retpath retpath))
+          
+                (:p :class "text-gray-500"
+                    :style "margin-top: -2rem"
+                    "Мы вышлем вам ссылку для входа.")))))
 
 (defmethod render-email-input ((widget custom-login-form))
   (with-html
-    (:input :name "email"
-            :type "email"
-            :class "border px-2"
-            :placeholder "Ваш email")))
+    (text-input "email"
+                :type "email"
+                :placeholder "Ваш email")))
 
 
 (defmethod render-submit-button ((widget custom-login-form))
   (with-html
-    (:input :type "submit"
-            :class "border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
-            :value "Войти")))
+    (app/widgets/utils::submit-button :text "Войти")))
 
 
 (defmethod form-css-classes ((widget custom-login-form))

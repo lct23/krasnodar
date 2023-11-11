@@ -75,8 +75,7 @@
     ;; ("/about/" (make-about-page))
     ("/html" (make-page-frame
               (make-html-to-sexp-page)))
-  ("/login" (make-page-frame
-             (make-login-processor)))
+  ("/login" (make-login-processor))
   ("/logout" (make-page-frame
               (make-logout-processor)))
   ("/kb" (make-page-frame
