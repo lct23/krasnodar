@@ -29,7 +29,8 @@
   ;; (render (app/widgets/add-knowledge-form::make-add-knowledge-form-widget))
   ;; (render (app/widgets/edit-knowledge-form::make-edit-knowledge-form-widget
   ;;          (app/models/knowledge::get-knowledge 20)))
-  (render (app/pages/user::make-user-dashboard-page))
+  (render (app/widgets/service-stats::make-service-stats-widget))
+  ;; (render (app/pages/user::make-user-dashboard-page))
   ;; (render (app/widgets/edit-board-form::make-edit-board-form-widget
   ;;          (app/models/board::get-board 6)))
   )

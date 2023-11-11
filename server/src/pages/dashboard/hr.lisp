@@ -16,7 +16,9 @@
                 #:period-title
                 #:get-stats-for-hr-dashboard)
   (:import-from #:serapeum
-                #:fmt))
+                #:fmt)
+  (:import-from #:app/widgets/service-stats
+                #:make-service-stats-widget))
 (in-package #:app/pages/dashboard/hr)
 
 
@@ -34,23 +36,7 @@
   (with-html
     ;; Статистика по кадрам
     (:div :class "flex flex-col gap-8"
-          (:div :class "flex size-xl"
-                (:div :class "mr-4"
-                      "Сотрудников: 150")
-                (:div :class "mr-4"
-                      "Отделов: 5")
-                (:div :class "mr-4"
-                      "Менторов: 6"))
-          ;; Тут будут графики
-          (:div :class "flex gap-4"
-                (:div :class "flex flex-col gap-2"
-                      (:img :src "https://storage.yandexcloud.net/hrzero-avatars/num-persons.jpeg")
-                      (:div :class "text-center font-bold"
-                            "Численность сотрудников"))
-                (:div :class "flex flex-col gap-2"
-                      (:img :src "https://storage.yandexcloud.net/hrzero-avatars/pie-chart.jpg")
-                      (:div :class "text-center font-bold"
-                            "Распределение онбордингов")))
+          (render (make-service-stats-widget))
 
           (:h1 :class "text-xl font-bold text-center"
                "Успешность прохождения онбординга")
