@@ -15,6 +15,7 @@
   (:import-from #:reblocks-ui/popup
                 #:show-popup)
   (:import-from #:reblocks-auth/providers/email/processing
+                #:sent
                 #:render-sent-message
                 #:render-email-input
                 #:form-css-classes
@@ -70,17 +71,18 @@
                 (:p "Введите свой email:")
                 (reblocks/widget:render
                  (make-instance 'custom-login-form
-                                :retpath retpath))
-          
-                (:p :class "text-gray-500"
-                    :style "margin-top: -2rem"
-                    "Мы вышлем вам ссылку для входа.")))))
+                                :retpath retpath))))))
 
 (defmethod render-email-input ((widget custom-login-form))
   (with-html
-    (text-input "email"
-                :type "email"
-                :placeholder "Ваш email")))
+    (:div :class "flex flex-col gap-4 w-full"
+          (text-input "email"
+                      :type "email"
+                      :placeholder "Ваш email")
+          (unless (sent widget)
+            (:p :class "text-gray-500"
+                :style "margin-top: -2rem"
+                "Мы вышлем вам ссылку для входа.")))))
 
 
 (defmethod render-submit-button ((widget custom-login-form))
@@ -94,7 +96,8 @@
 
 (defmethod render-sent-message ((widget custom-login-form))
   (with-html
-    (:p "Ссылка для входа была отправлена на ваш email.")))
+    (:p :style "margin-bottom: 2rem"
+        "Ссылка для входа была отправлена на ваш email.")))
 
 
 (define-code-sender send-code ("HR Сервис <noreply@hrzero.ru>" url :subject "Ссылка для входа на сайт")

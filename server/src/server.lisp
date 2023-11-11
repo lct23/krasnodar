@@ -16,6 +16,8 @@
                 #:resend-api-key)
   (:import-from #:app/widgets/utils
                 #:set-custom-reblocks-theme)
+  (:import-from #:reblocks-auth/core
+                #:*allow-new-accounts-creation*)
   (:shadow #:restart)
   (:export #:start
            #:restart
@@ -79,6 +81,10 @@
   (setf reblocks/variables:*max-pages-per-session* 10)
 
   (set-custom-reblocks-theme)
+
+  ;; Запретим создавать новые учётки
+  (setf *allow-new-accounts-creation*
+        nil)
 
   (reblocks/server:start :port port
 			 :interface interface

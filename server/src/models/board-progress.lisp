@@ -51,11 +51,7 @@
   (:import-from #:app/emails/welcome
                 #:send-welcome-message)
   (:import-from #:app/models/game
-                #:game)
-  (:import-from #:app/models/board-progress
-                #:game-score
-                #:game-finished-at
-                #:game-results))
+                #:game))
 (in-package #:app/models/board-progress)
 
 
