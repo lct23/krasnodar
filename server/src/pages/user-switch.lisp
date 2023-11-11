@@ -147,22 +147,22 @@
           ((or (get-current-user)
                allow-for-anonymous)
            (:div :class "flex flex-col gap-8"
-                 (:div
+                 (:div :class "mx-40 border shadow-xl my-8 p-8"
                   (:p "Эта страница сделана для удобства тестирования. Тут можно переключаться на пользователей с разными ролями, чтобы попробовать разный функционал сайта.")
                   (:p "Тут можно переключаться на пользователей с разными ролями, чтобы попробовать разный функционал сайта.")
                   (:p "После выбора пользователя вас \"залогинит\" под его учёткой и перекинет на дашборд."))
 
                  (:h1 :class "text-xl font-bold text-center"
-                      "Сотрудники для просмотра жюри")
-                 (:div :class "flex flex-col gap-4"
+                      "Сотрудники для тестированя")
+                 (:div :class "flex flex-col gap-4 mx-auto"
                        (loop for (user-id title) in *users-to-show*
                              for user = (get-user user-id)
                              do (render (make-user-switch-widget user title
                                                                  :on-switch #'on-switch))))
                  (:h1 :class "text-xl font-bold text-center"
-                      "Остальные все сотрудники (их завтра уберём)")
+                      "Остальные сотрудники")
                  
-                 (:div :class "flex flex-col gap-4"
+                 (:div :class "flex flex-col gap-4 mx-auto"
                        (loop for user in (get-all-users)
                              for user-id = (mito:object-id user)
                              for name = (user-name user)
@@ -215,8 +215,9 @@
                              "border-4 border-red-500")
                   :src (user-avatar-url user)))
         (unless (small widget)
-          (:div :class "flex flex-col"
-                (:div (user-name user))
+          (:div :class "flex flex-col whitespace-nowrap min-w-[15rem] max-w-[20rem]"
+                (:div :class ""
+                      (user-name user))
                 (:div (description widget)))
         
           (submit-button :text "Переключиться"
