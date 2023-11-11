@@ -1,4 +1,4 @@
-(uiop:define-package #:app/pages/user
+(uiop:define-package #:app/pages/dashboard/user
   (:use #:cl)
   (:import-from #:reblocks/widget
                 #:render
@@ -28,21 +28,22 @@
                 #:now)
   (:import-from #:serapeum
                 #:fmt))
-(in-package #:app/pages/user)
+(in-package #:app/pages/dashboard/user)
 
 
 (defwidget user-dashboard-page ()
-  ())
+  ((page-title :initform  "Дашборд сотрудника"
+               :initarg :page-title
+               :reader page-title)))
 
 
 (defun make-user-dashboard-page ()
   (make-instance 'user-dashboard-page))
 
 
-(defmethod render ((widget user-dashboard-page))
-  (title "Дашборд сотрудника")
-  
-  (let ((user ;; (get-user 1)
+(defgeneric render-dashboard-content (widget)
+  (:method ((widget user-dashboard-page))
+      (let ((user ;; (get-user 1)
           (get-current-user)))
     (with-html
       (cond
@@ -61,4 +62,10 @@
                 (t
                  (:p "Онбординг должен был начаться, но что-то пошло не так, свяжитесь с HR.")))))))
         (t
-         (:p "Чтобы работать с системой, надо залогиниться."))))))
+         (:p "Чтобы работать с системой, надо залогиниться.")))))))
+
+
+(defmethod render ((widget user-dashboard-page))
+  (title (page-title widget))
+  
+  (render-dashboard-content widget))

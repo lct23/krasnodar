@@ -76,6 +76,14 @@
                    WHERE can_be_mentor
                 ORDER BY name"))
 
+
+(defun get-mentee (user)
+  "Подопечные человека"
+  (mito:retrieve-dao 'user
+                     :mentor user))
+
+
+
 (defun get-user (id)
   (when (and id
              (not (equal id "")))

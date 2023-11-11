@@ -18,6 +18,7 @@
   (:import-from #:reblocks/request
                 #:get-path)
   (:import-from #:app/models/user
+                #:user-is-mentor-p
                 #:user-name
                 #:get-user)
   (:import-from #:app/widgets/user
@@ -51,8 +52,9 @@
            (with-html
              (:div :class "flex flex-col gap-8"
                    (render widget)
-                   (when (and (hr-p (get-current-user))
-                              )
+                   (when (and (get-current-user)
+                              (or (hr-p (get-current-user))
+                                  (user-is-mentor-p (get-current-user))))
                      (cond
                        ;; У текущего сотрудника начат онбординг
                        ((user-progress user)
