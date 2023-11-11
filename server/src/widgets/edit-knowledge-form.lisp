@@ -8,6 +8,7 @@
   (:import-from #:reblocks/dependencies
                 #:get-dependencies)
   (:import-from #:app/models/knowledge
+                #:knowledge-game
                 #:knowledge-questionnaire
                 #:knowledge-document
                 #:knowledge)
@@ -16,7 +17,13 @@
   (:import-from #:app/widgets/questionnairies
                 #:make-questionnaire-widget)
   (:import-from #:app/models/roles
-                #:hr-p))
+                #:hr-p)
+  (:import-from #:reblocks-auth/models
+                #:get-current-user)
+  (:import-from #:serapeum
+                #:fmt)
+  (:import-from #:app/models/game
+                #:game-title))
 (in-package #:app/widgets/edit-knowledge-form)
 
 
@@ -35,6 +42,7 @@
   (let* ((knowledge (knowledge widget))
          (document (knowledge-document knowledge))
          (questionnaire (knowledge-questionnaire knowledge))
+         (game (knowledge-game knowledge))
          (user (get-current-user))
          (is-hr (hr-p user)))
     
@@ -47,9 +55,16 @@
              "Документ")
         (render (make-edit-document-form-widget document)))
 
-      (when questionnaire
-        (:div :class "flex flex-col gap-4"
-              (:h1 :class "text-3xl"
-                   "Опрос")
-              (render (make-questionnaire-widget questionnaire)))))))
+      (cond
+        (game
+          (:div :class "my-8"
+                (:p :class "text-lg font-bold text-gray-700"
+                    (fmt "К знанию привязана игра: \"~A\""
+                         (game-title game)))
+                (:p "Настройка игр пока не поддержана в редакторе.")))
+        (questionnaire
+          (:div :class "flex flex-col gap-4"
+                (:h1 :class "text-3xl"
+                     "Опрос")
+                (render (make-questionnaire-widget questionnaire))))))))
 

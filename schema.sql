@@ -121,11 +121,27 @@ CREATE TABLE board_period (
 );
 
 
+-- Игры
+
+CREATE TABLE game (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    widget_name TEXT NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+insert into game (title, widget_name, created_at, updated_at) values ('Запомни имена коллег', 'learn-names', now(), now());
+
+
+-- Знания
+
 CREATE TABLE knowledge (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     department_id BIGINT REFERENCES department ON DELETE SET NULL,
     document_id BIGINT  REFERENCES document ON DELETE SET NULL,
     questionnaire_id BIGINT REFERENCES questionnaire ON DELETE SET NULL,
+    game_id BIGINT REFERENCES game ON DELETE SET NULL,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
@@ -203,3 +219,5 @@ CREATE TABLE notification (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
+
+

@@ -16,7 +16,9 @@
                 #:make-default-questionnaire
                 #:questionnaire-document
                 #:make-questionnaire
-                #:questionnaire))
+                #:questionnaire)
+  (:import-from #:app/models/game
+                #:game))
 (in-package #:app/models/knowledge)
 
 
@@ -28,6 +30,9 @@
    (document :col-type (or :null document)
              :initarg :document
              :reader knowledge-document)
+   (game :col-type (or :null game)
+         :initarg :game
+         :reader knowledge-game)
    (questionnaire :col-type (or :null questionnaire)
                   :initarg :questionnaire
                   :reader knowledge-questionnaire))

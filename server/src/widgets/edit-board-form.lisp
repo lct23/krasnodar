@@ -67,6 +67,7 @@
         (submit-button :text "Сохранить")))
       
     (with-html
-      (loop for period in periods
-            do (render (make-period-edit-form-widget period))))))
+      (:div :class "flex flex-col gap-8"
+            (loop for period in periods
+                  do (render (make-period-edit-form-widget period)))))))
 

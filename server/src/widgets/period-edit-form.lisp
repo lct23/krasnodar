@@ -27,6 +27,7 @@
                 #:add-deletion-callbacks
                 #:add-to-the-end)
   (:import-from #:app/widgets/small-button
+                #:small-and-round-delete-button
                 #:small-button))
 (in-package #:app/widgets/period-edit-form)
 
@@ -74,7 +75,8 @@
 (defmethod render ((widget period-edit-form-widget))
   (with-html
     (let ((period (period widget)))
-      (:h1 (period-title period))
+      (:h1 :class "text-xl font-bold"
+           (period-title period))
       (let ((list (make-editable-period-knowledges-list-widget period))
             (form (make-add-knowledge-to-period-form-widget (period widget))))
         (flet ((add-list-item (period-knowledge)
@@ -99,13 +101,25 @@
              (event-emitter:emit :delete widget
                                  widget)))
       (let ((knowledge (app/models/board::knowledge (period-knowledge widget))))
-        (:div :class "border"
+        (:div :class "inline-flex"
               (knownledge-title knowledge)
               (render
-               (small-button "X"
-                             :on-click #'remove-item)))))))
+               (small-and-round-delete-button :on-click #'remove-item)))))))
 
+
+(defmethod reblocks/widget:get-html-tag ((widget editable-period-knowledges-list-widget))
+  :ul)
+
+(defmethod reblocks/widget:get-css-classes ((widget editable-period-knowledges-list-widget))
+  (list* "list-disc list-inside"
+         (call-next-method)))
+
+(defmethod reblocks/widget:get-html-tag ((widget editable-period-knowledge-widget))
+  :li)
+
+(defmethod reblocks/widget:get-css-classes ((widget editable-period-knowledge-widget))
+  (call-next-method))
 
 (defmethod reblocks/widget:get-css-classes ((widget period-edit-form-widget))
-  (list* "bg-white hover:text-blue-500 shadow-lg rounded-lg p-8 mb-10 lg:mb-0 flex flex-col hover:shadow-xl hover:scale-105 max-w-6xl mx-auto"
+  (list* "w-2/3 bg-white text-gray-400 hover:text-gray-900 shadow-lg rounded-lg p-8 mb-10 lg:mb-0 flex flex-col hover:shadow-xl hover:scale-105 max-w-6xl mx-auto gap-4"
          (call-next-method)))

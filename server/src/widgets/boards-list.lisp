@@ -41,7 +41,8 @@
   (render
    (make-table
     (list (column "Название"
-                  :getter #'board-title)
+                  :getter #'board-title
+                  :classes "w-full")
           (column "Отдел"
                   :getter (lambda (board)
                             (let ((department (board-department board)))
