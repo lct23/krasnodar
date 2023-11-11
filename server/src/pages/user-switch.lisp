@@ -101,14 +101,15 @@
                           (22 "Ментор")
                           (23 "Новый сотрудник"))))
 
-    (when (and secret-code-given-p
-               (null (get-current-user)))
+    (when secret-code-given-p
       (log-invite-usage code)
-      (reblocks/session:reset)
-      ;; Залогиним как HR и редиректнем на /
-      (setf (get-current-user)
-            (get-user 32))
-      (redirect "/"))
+      
+      (unless (get-current-user)
+        (reblocks/session:reset)
+        ;; Залогиним как HR и редиректнем на /
+        (setf (get-current-user)
+              (get-user 32))
+        (redirect "/")))
     
     (flet ((on-switch (subwidget)
              (declare (ignore subwidget))
