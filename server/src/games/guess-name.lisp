@@ -241,7 +241,7 @@
                                                 "text-gray-400")))
                                             (t
                                              ""))
-                              do (:div :class "flex gap-2"
+                              do (:div :class "flex gap-2 whitespace-nowrap"
                                        (:input :type "radio"
                                                :name "answer"
                                                :id name
