@@ -140,6 +140,15 @@
   (:metaclass mito:dao-table-class))
 
 
+(defun is-period-successful (period)
+  (loop for knowledge-progresses in (get-knowledge-progresses period)
+        for questionnaire-result = (questionnaire-results knowledge-progresses)
+        for progress = (questionnaire-results-progress questionnaire-result)
+        when (zerop progress)
+        do (return-from is-period-successful nil))
+  (values t))
+
+
 (defun get-period-knowledge-progress (id)
   (find-dao 'period-knowledge-progress
             :id id))

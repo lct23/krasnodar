@@ -1,4 +1,4 @@
-(uiop:define-package #:app/widgets/board-progress
+(uiop:define-package #:app/widgets/board-progress-for-hr
   (:use #:cl)
   (:import-from #:reblocks/widget
                 #:render
@@ -29,22 +29,23 @@
   (:import-from #:local-time
                 #:timestamp<
                 #:now))
-(in-package #:app/widgets/board-progress)
+(in-package #:app/widgets/board-progress-for-hr)
 
 
-(defwidget board-progress-widget ()
+(defwidget board-progress-widget-for-hr ()
   ((board-progress :initarg :board-progress
                    :reader board-progress)))
 
 
-(defun make-board-progress-widget (board-progress)
-  (make-instance 'board-progress-widget
-                 :board-progress board-progress))
+(defun make-board-progress-widget-for-hr (user)
+  (let ((board-progress (app/models/board-progress::user-progress user)))
+    (make-instance 'board-progress-widget-for-hr
+                   :board-progress board-progress)))
 
 
-(defmethod render ((widget board-progress-widget))
+(defmethod render ((widget board-progress-widget-for-hr))
   (with-html
-    (flet ((columns (not-started-yet)
+    (flet ((columns ()
              (list (column "Знание"
                            :getter #'period-knowledge-progress-title
                            :classes (list "w-full"))
@@ -55,16 +56,7 @@
                                      (let ((value (period-knowledge-progress-percent obj)))
                                        (if (zerop value)
                                            "-"
-                                           (fmt "~A%" value)))))
-                   (column "Действия"
-                           :getter (lambda (obj)
-                                     (let ((value (period-knowledge-progress-percent obj)))
-                                       (if (zerop value)
-                                           (redirect-button "Изучить"
-                                                            (fmt "/learn/~A"
-                                                                 (mito:object-id obj))
-                                                            :disabled not-started-yet)
-                                           "")))))))
+                                           (fmt "~A%" value))))))))
       (:div :class "flex flex-col gap-8"
             (loop with has-progresses = nil
                   and now = (now)
@@ -97,7 +89,7 @@
                                           (fmt "~A: Дедлайн истёк ~A назад"
                                                title
                                                (time-to now :base-ts ends-at))))))
-                           (render (make-table (columns not-started-yet)
+                           (render (make-table (columns)
                                                progresses)))
                   finally (unless has-progresses
                             (:div :class "text-xl font-bold text-center"

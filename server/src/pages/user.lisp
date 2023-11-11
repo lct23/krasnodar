@@ -21,7 +21,11 @@
                 #:user-name
                 #:get-user)
   (:import-from #:app/widgets/user
-                #:make-user-widget))
+                #:make-user-widget)
+  (:import-from #:app/models/roles
+                #:hr-p)
+  (:import-from #:app/widgets/board-progress-for-hr
+                #:make-board-progress-widget-for-hr))
 (in-package #:app/pages/user)
 
 
@@ -42,6 +46,14 @@
          (let ((widget (make-user-widget user)))
       
            (title (user-name user))
-           (render widget)))
+           (with-html
+             (:div :class "flex flex-col gap-8"
+                   (render widget)
+                   (when (hr-p (get-current-user))
+                     (with-html
+                       (:div :class "flex flex-col gap-4"
+                             (:h1 :class "text-xl font-bold text-center"
+                                  "Прогресс по онбордингу")
+                             (render (make-board-progress-widget-for-hr user)))))))))
         (t
          (title "Сотрудник не найден."))))))
