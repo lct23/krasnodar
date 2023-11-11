@@ -96,8 +96,10 @@
                        (make-del-board-page)))
   ("/notifications" (make-page-frame
                      (make-notifications-page)))
-  ("/playground" (make-page-frame
-                  (app/pages/playground::make-playground-widget)))
+  ("/playground" (make-landing-page)
+                 ;; (make-page-frame
+                 ;;  (app/pages/playground::make-playground-widget))
+                 )
   ("/test-game/1" (make-page-frame
                    (make-test-game-widget "Запомни имена коллег!"
                                           'app/games/guess-name::make-guess-name-widget)))
@@ -121,8 +123,7 @@
                           (make-test-notifications-page)))
   ("/switch" (make-page-frame
               (make-user-switch-page)))
-  ("/" (make-page-frame
-        (make-dashboard-page))))
+  ("/" (make-dashboard-page)))
 
 
 (defmethod reblocks/dependencies:get-dependencies ((widget routes))

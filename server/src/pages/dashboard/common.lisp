@@ -9,7 +9,9 @@
   (:import-from #:app/pages/landing
                 #:make-landing-page)
   (:import-from #:app/pages/user
-                #:make-user-dashboard-page))
+                #:make-user-dashboard-page)
+  (:import-from #:app/widgets/frame
+                #:make-page-frame))
 (in-package #:app/pages/dashboard/common)
 
 
@@ -18,8 +20,10 @@
   (let ((user (get-current-user)))
     (cond
       ((hr-p user)
-       (make-hr-dashboard-widget))
+       (make-page-frame
+        (make-hr-dashboard-widget)))
       (user
-       (make-user-dashboard-page))
+       (make-page-frame
+        (make-user-dashboard-page)))
       (t
        (make-landing-page)))))
