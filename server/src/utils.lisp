@@ -54,3 +54,9 @@
     (local-time:adjust-timestamp from-ts
       (:offset :sec (coerce (floor (random duration))
                             'integer)))))
+
+
+(defun format-datetime (ts)
+  (local-time:format-timestring nil
+                                ts
+                                :format +human-datetime-format+))

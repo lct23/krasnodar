@@ -36,6 +36,7 @@
                 #:where
                 #:order-by)
   (:import-from #:local-time
+                #:timestamp-maximum
                 #:timestamp>=
                 #:now)
   (:import-from #:log4cl-extras/error
@@ -147,6 +148,15 @@
         when (zerop progress)
         do (return-from is-period-successful nil))
   (values t))
+
+
+(defun last-answer-date (period)
+  (loop for knowledge-progresses in (get-knowledge-progresses period)
+        for questionnaire-result = (questionnaire-results knowledge-progresses)
+        for responses = (get-question-responses questionnaire-result)
+        appending (mapcar #'answered-at responses) into all-timestamps
+        finally (return (apply #'timestamp-maximum
+                               all-timestamps))))
 
 
 (defun get-period-knowledge-progress (id)

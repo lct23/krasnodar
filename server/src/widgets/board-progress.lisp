@@ -8,6 +8,7 @@
   (:import-from #:reblocks/dependencies
                 #:get-dependencies)
   (:import-from #:app/models/board-progress
+                #:last-answer-date
                 #:is-period-successful
                 #:starts-at
                 #:ends-at
@@ -25,6 +26,7 @@
   (:import-from #:app/widgets/redirect-button
                 #:redirect-button)
   (:import-from #:app/utils
+                #:format-datetime
                 #:time-to)
   (:import-from #:local-time
                 #:timestamp<
@@ -90,8 +92,9 @@
                                                (time-to ends-at))))
                                   ((is-period-successful period)
                                    (:span :class "text-gray-700"
-                                          (fmt "~A: Полностью изучен"
-                                               title)))
+                                          (fmt "~A: Полностью изучен ~A"
+                                               title
+                                               (format-datetime (last-answer-date period)))))
                                   (t
                                    (:span :class "text-red-700"
                                           (fmt "~A: Дедлайн истёк ~A назад"
