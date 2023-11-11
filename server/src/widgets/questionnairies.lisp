@@ -21,6 +21,7 @@
   (:import-from #:reblocks-ui2/widget
                 #:ui-widget)
   (:import-from #:app/widgets/utils
+                #:checkbox
                 #:*small-button-classes*
                 #:text-input
                 #:submit-button
@@ -48,6 +49,7 @@
   (:import-from #:reblocks-ui/form
                 #:with-html-form)
   (:import-from #:app/widgets/small-button
+                #:small-and-round-delete-button
                 #:small-button))
 (in-package #:app/widgets/questionnairies)
 
@@ -218,12 +220,13 @@
 
 (defmethod get-css-classes ((widget questionnaire-widget))
   (list "questionnaire-widget"
-        "border border-green-500 p-2 mb-6 rounded"))
+        "border border-gray-300 p-4 rounded shadow-lg"))
 
 
 (defmethod render ((widget possible-answer-form-widget))
   (flet ((add-new-item (&key text correct &allow-other-keys)
-           (let ((new-item (add-possible-answer (question widget) text
+           (let ((new-item (add-possible-answer (question widget)
+                                                text
                                                 :correct (when correct
                                                            t))))
              (event-emitter:emit :object-created widget
@@ -232,9 +235,8 @@
                      :class "w-full mb-8 flex items-center")
       (text-input "text"
                   :label "Возможный ответ")
-      ;; TODO: add check-box
-      ;; (text-input "text"
-      ;;             :label "Возможный ответ")
+      (checkbox "correct"
+                :label "Правильный ответ")
       (submit-button :text "Добавить"))))
 
 
@@ -242,10 +244,20 @@
   (let ((form (make-instance 'possible-answer-form-widget
                              :question (question widget))))
     (flet ((add-new-item (possible-answer)
+             ;; Если был добавлен правильный ответ, то нам надо
+             ;; обновить предыдущий правильный чтобы в UI правильный ответ был только один
+             (when (possible-answer-correct-p possible-answer)
+               (loop with previous-answers-widgets = (possible-answers widget)
+                     for answer-widget in previous-answers-widgets
+                     for answer = (possible-answer answer-widget)
+                     when (possible-answer-correct-p answer)
+                     do (setf (possible-answer-correct-p answer) nil)
+                        (update answer-widget)))
+             ;; Затем добавим новый ответ в конец списка
              (add-to-the-end widget
                              (possible-answers widget)
-                             ;; TODO: apply delete handler here
                              (make-possible-answer-widget possible-answer))
+             
              (update form))
            ;; Обработчик удаления:
            (remove-item (&rest rest)
@@ -262,8 +274,7 @@
               (app/models/questionnaire::question
                (question widget)))
          (render
-          (small-button "X"
-                        :on-click #'remove-item)))
+          (small-and-round-delete-button :on-click #'remove-item)))
 
         (:ul
          (loop for widget in (possible-answers widget)
@@ -286,8 +297,7 @@
         (:span :class classes
                text)
         (render
-         (small-button "X"
-                       :on-click #'remove-item))))))
+         (small-and-round-delete-button :on-click #'remove-item))))))
 
 (defmethod reblocks/widget:get-html-tag ((widget possible-answer-widget))
   :li)

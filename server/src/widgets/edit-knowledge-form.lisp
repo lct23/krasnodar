@@ -48,7 +48,8 @@
         (render (make-edit-document-form-widget document)))
 
       (when questionnaire
-        (:h1 :class "text-3xl"
-             "Опрос")
-        (render (make-questionnaire-widget questionnaire))))))
+        (:div :class "flex flex-col gap-4"
+              (:h1 :class "text-3xl"
+                   "Опрос")
+              (render (make-questionnaire-widget questionnaire)))))))
 

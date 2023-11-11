@@ -1,7 +1,11 @@
 (uiop:define-package #:app/models/questionnaire
   (:use #:cl)
   (:import-from #:app/models/document
-                #:document))
+                #:document)
+  (:import-from #:40ants-pg/transactions
+                #:with-transaction)
+  (:import-from #:mito
+                #:object-id))
 (in-package #:app/models/questionnaire)
 
 
@@ -78,13 +82,27 @@
                    :question question))
 
 
+(defun reset-correct-answer (question)
+  (check-type question question)
+  (mito:execute-sql "
+UPDATE possible_answer
+   SET correct = FALSE
+ WHERE question_id = ?"
+                    (list (object-id question))))
+
+
 (defun add-possible-answer (question text &key correct)
   (check-type question question)
   (check-type text string)
-  (mito:create-dao 'possible-answer
-                   :question question
-                   :text text
-                   :correct correct))
+  (with-transaction
+    (when correct
+      ;; Правильный ответ может быть только один,
+      ;; поэтому сбросим предыдущий
+      (reset-correct-answer question))
+    (mito:create-dao 'possible-answer
+                     :question question
+                     :text text
+                     :correct correct)))
 
 (defun delete-question (question)
   (check-type question question)
