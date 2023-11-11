@@ -17,6 +17,7 @@
   (:import-from #:reblocks/response
                 #:redirect)
   (:import-from #:app/widgets/utils
+                #:*button-classes*
                 #:submit-button)
   (:import-from #:reblocks-ui/form
                 #:with-html-form)
@@ -35,7 +36,9 @@
   (:import-from #:app/utils
                 #:format-datetime)
   (:import-from #:local-time
-                #:now))
+                #:now)
+  (:import-from #:serapeum
+                #:fmt))
 (in-package #:app/pages/user-switch)
 
 
@@ -47,14 +50,19 @@
   ((user :type user
          :initarg :user
          :reader user)
+   (small :type boolean
+          :initform nil
+          :initarg :small
+          :reader small)
    (description :type string
                 :initarg :description
                 :reader description)))
 
 
-(defun make-user-switch-widget (user description &key on-switch)
+(defun make-user-switch-widget (user description &key on-switch small)
   (let ((widget (make-instance 'user-switch-widget
                                :user user
+                               :small small
                                :description description)))
     (when on-switch
       (event-emitter:on :switched widget
@@ -88,6 +96,26 @@
             code)))
 
 
+(defparameter *users-to-show*
+  '((32 "Сотрудник HR")
+    (22 "Ментор")
+    (23 "Новый сотрудник")))
+
+
+(defun render-switch-for-sidebar ()
+  (flet ((on-switch (subwidget)
+           (declare (ignore subwidget))
+           (redirect "/")))
+    (with-html
+      (:div :class "flex flex-col gap-2 mx-4"
+            (loop for (user-id title) in *users-to-show*
+                  for user = (get-user user-id)
+                  do (render
+                      (make-user-switch-widget user title
+                                               :small t
+                                               :on-switch #'on-switch)))))))
+
+
 (defmethod render ((widget user-switch-page))
   (title "Переключалка учёток")
 
@@ -96,10 +124,7 @@
          (code (get-parameter "invite"))
          (secret-code-given-p (and code
                                    (member code *invites*
-                                           :test #'string-equal)) )
-         (users-to-show '((32 "Сотрудник HR")
-                          (22 "Ментор")
-                          (23 "Новый сотрудник"))))
+                                           :test #'string-equal)) ))
 
     (when secret-code-given-p
       (log-invite-usage code)
@@ -128,7 +153,7 @@
                  (:h1 :class "text-xl font-bold text-center"
                       "Сотрудники для просмотра жюри")
                  (:div :class "flex flex-col gap-4"
-                       (loop for (user-id title) in users-to-show
+                       (loop for (user-id title) in *users-to-show*
                              for user = (get-user user-id)
                              do (render (make-user-switch-widget user title
                                                                  :on-switch #'on-switch))))
@@ -139,7 +164,7 @@
                        (loop for user in (get-all-users)
                              for user-id = (mito:object-id user)
                              for name = (user-name user)
-                             unless (member user-id users-to-show
+                             unless (member user-id *users-to-show*
                                             :key #'first)
                              do (render (make-user-switch-widget user ""
                                                                  :on-switch #'on-switch))))))
@@ -167,12 +192,25 @@
                              (object-id (get-current-user))))))
       (with-html-form (:post #'switch
                        :class "flex gap-4")
-        (:img :style "width: 40px; height: 40px"
-              :class (if current-p
-                         "border-4 border-red-500")
-              :src (user-avatar-url user))
-        (:div :class "flex flex-col"
-              (:div (user-name user))
-              (:div (description widget)))
-        (submit-button :text "Переключиться"
-                       :disabled current-p)))))
+        (if (small widget)
+            (:button :type "submit"
+                     :disabled (not (null current-p))
+                     :class "ml-4"
+                     (:img :style "width: 80px; height: 80px"
+                           :title (fmt "~A - ~A"
+                                       (user-name user)
+                                       (description widget))
+                           :class (if current-p
+                                      "border-4 border-red-500")
+                           :src (user-avatar-url user)))
+            (:img :style "width: 40px; height: 40px"
+                  :class (if current-p
+                             "border-4 border-red-500")
+                  :src (user-avatar-url user)))
+        (unless (small widget)
+          (:div :class "flex flex-col"
+                (:div (user-name user))
+                (:div (description widget)))
+        
+          (submit-button :text "Переключиться"
+                         :disabled current-p))))))

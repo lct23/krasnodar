@@ -24,6 +24,8 @@
                 #:get-current-user)
   (:import-from #:str
                 #:starts-with-p)
+  (:import-from #:app/pages/user-switch
+                #:render-switch-for-sidebar)
   (:export #:make-page-frame))
 (in-package #:app/widgets/frame)
 
@@ -145,11 +147,13 @@
                           (item "/boards" "Онбординги")))
 
                        (title "Временные странички")
-                   
                        (:ul
-                        (item "/playground" "Песочница")
                         (item "/switch" "Переключить учётку")
-                        (item "/test-notifications" "Тест уведомлений")))
+                        (item "/test-notifications" "Тест уведомлений"))
+                   
+                       (title "Тестовые аккаунты")
+                       (render-switch-for-sidebar))
+                      
                       (t
                        (:ul
                         (item "/" "Лэндинг")
