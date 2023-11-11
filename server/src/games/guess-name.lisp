@@ -20,6 +20,8 @@
                 #:user-avatar-url
                 #:user-name)
   (:import-from #:serapeum
+                #:push-end
+                #:fmt
                 #:take)
   (:import-from #:alexandria
                 #:shuffle)
@@ -52,9 +54,21 @@
   (:documentation "Карточка с фоткой сотрудника и несколькими именами на выбор."))
 
 
+(defmethod print-object ((obj card-widget) stream)
+  (print-unreadable-object (obj stream :type t)
+    (format stream "~A attempts: ~A, correct: ~A"
+            (correct-name obj)
+            (num-attempts-left obj)
+            (answer-correct-p obj))))
+
+
 (defwidget guess-name-widget ()
   ((cards :initarg :cards
-          :accessor cards))
+          :accessor cards)
+   (failed-cards :initform nil
+                 :accessor failed-cards)
+   (successful-cards :initform nil
+                     :accessor successful-cards))
   (:documentation "Игра в которой по фотографии надо угадывать имя коллеги."))
 
 
@@ -68,66 +82,79 @@
                             all))
          (users (random-sample all num-cards))
          (main-widget (make-instance 'guess-name-widget))
-         (cards (loop for user in users
-                      for correct-name = (user-name user)
-                      for names = (shuffle
-                                   (list* correct-name
-                                          (take 4
-                                                (remove correct-name
-                                                        (remove-duplicates
-                                                         (random-sample
-                                                         ;; Возьмем имен с запасом
-                                                          all-names
-                                                          10)
-                                                         :test 'string-equal)
-                                                        :test 'string-equal))))
-                      for card = (make-instance 'card-widget
-                                                :user user
-                                                :names names
-                                                :correct-name correct-name)
-                      do (event-emitter:on :next-button card
-                                           (lambda (card)
-                                             ;; Если карточка отвечена неверно, то сбросим ответ
-                                             ;; и если закончились попытки, то пометим как непройденную.
-                                             (unless (answer-correct-p card)
-                                               (decf (num-attempts-left card))
-                                               (cond
-                                                 ((zerop (num-attempts-left card))
-                                                  (setf (failed card)
-                                                        t))
-                                                 (t
-                                                  (reset-answer card))))
+         (cards
+           (flet ((on-next-button (card)
+                    ;; Если карточка отвечена неверно, то сбросим ответ
+                    ;; и если закончились попытки, то пометим как непройденную.
 
-                                             ;; Переставим карточку в конец колоды
-                                             (setf (cards main-widget)
-                                                   (append (cdr (cards main-widget))
-                                                           (list card)))
-                                             (update main-widget)))
-                      collect card)))
+                    ;; Вынем карточку из общей колоды
+                    (setf (cards main-widget)
+                          (rest (cards main-widget)))
+                                             
+                    (cond
+                      ((answer-correct-p card)
+                       ;; И переложим в успешные
+                       (push card
+                             (successful-cards main-widget)))
+                      (t
+                       (decf (num-attempts-left card))
+                       (cond
+                         ;; Если попытки истекли, то переложим в неуспешные
+                         ((zerop (num-attempts-left card))
+                          (setf (failed card)
+                                t)
+                          (push card
+                                (failed-cards main-widget)))
+                         ;; Если есть ещё попытки, то засунем
+                         ;; карточку в конец колоды
+                         (t
+                          (reset-answer card)
+                          (push-end card
+                                    (cards main-widget))))))
+                    (update main-widget)))
+             (loop for user in users
+                   for correct-name = (user-name user)
+                   for names = (shuffle
+                                (list* correct-name
+                                       (take 4
+                                             (remove correct-name
+                                                     (remove-duplicates
+                                                      (random-sample
+                                                            ;; Возьмем имен с запасом
+                                                       all-names
+                                                       10)
+                                                      :test 'string-equal)
+                                                     :test 'string-equal))))
+                   for card = (make-instance 'card-widget
+                                             :user user
+                                             :names names
+                                             :correct-name correct-name)
+                   do (event-emitter:on :next-button card
+                                        #'on-next-button)
+                   collect card))))
     (setf (cards main-widget)
           cards)
     main-widget))
 
 
+(defvar *cards* nil)
+
 (defmethod render ((widget guess-name-widget))
-  (let* ((all-cards (cards widget))
-         (card
-           (first
-            (remove-if (lambda (card)
-                         (or (failed card)
-                             (answer-correct-p card)))
-                       all-cards))))
+  (let* ((card (first (cards widget))))
     (with-html
       (:div :class "flex justify-center"
             (cond
               (card
+               (setf *cards*
+                     (list (get-current-user) (cards widget)))
                (render card))
               (t
                (:div :class "flex flex-col gap-8"
                      (:div :class "text-2xl font-bold text-center"
                            "Поздравляем!")
                      (:div :class "text-xl font-bold text-center"
-                           "Вы успешно прошли игру!")
+                           (fmt "Вы успешно прошли игру и запомнили имена ~A коллег!"
+                                (length (successful-cards widget))))
                      (:div :class "text-center"
                            :style "font-size: 200px"
                            "🎉"))))))))
