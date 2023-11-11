@@ -66,7 +66,7 @@
   (with-html
     (:div :class "w-1/2 mx-auto mt-20 border rounded shadow-xl p-8 flex flex-col gap-8"
           (:p :class "text-xl font-bold"
-              "Вход доступен только только для сотрудников.")
+              "Вход доступен только для сотрудников.")
           (:div :class "flex flex-col gap-4"
                 (:p "Введите свой email:")
                 (reblocks/widget:render
