@@ -27,7 +27,15 @@
   (:import-from #:reblocks-ui2/widget
                 #:ui-widget)
   (:import-from #:event-emitter
-                #:event-emitter))
+                #:event-emitter)
+  (:import-from #:reblocks/request
+                #:get-parameter)
+  (:import-from #:alexandria
+                #:with-output-to-file)
+  (:import-from #:app/utils
+                #:format-datetime)
+  (:import-from #:local-time
+                #:now))
 (in-package #:app/pages/user-switch)
 
 
@@ -58,14 +66,50 @@
   (make-instance 'user-switch-page))
 
 
+(defvar *invites* nil)
+
+
+(defun add-invite ()
+  (let ((invite (princ-to-string (uuid:make-v4-uuid))))
+    (push invite
+          *invites*)
+    (format nil "https://hrzero.ru/switch?invite=~A"
+            invite)))
+
+
+(defun log-invite-usage (code)
+  (with-output-to-file (s "~/lct-invite.log"
+                          :if-exists :append
+                          :if-does-not-exist :create)
+
+    (log:warn "Invite code was used" code)
+    (format s "~A: code ~A was used to login~%"
+            (format-datetime (now))
+            code)))
+
+
 (defmethod render ((widget user-switch-page))
   (title "Переключалка учёток")
 
   ;; TODO: для прода это надо выставить в NIL
-  (let ((allow-for-anonymous t)
-        (users-to-show '((32 "Сотрудник HR")
-                         (22 "Ментор")
-                         (23 "Новый сотрудник"))))
+  (let* ((allow-for-anonymous nil)
+         (code (get-parameter "invite"))
+         (secret-code-given-p (and code
+                                   (member code *invites*
+                                           :test #'string-equal)) )
+         (users-to-show '((32 "Сотрудник HR")
+                          (22 "Ментор")
+                          (23 "Новый сотрудник"))))
+
+    (when (and secret-code-given-p
+               (null (get-current-user)))
+      (log-invite-usage code)
+      (reblocks/session:reset)
+      ;; Залогиним как HR и редиректнем на /
+      (setf (get-current-user)
+            (get-user 32))
+      (redirect "/"))
+    
     (flet ((on-switch (subwidget)
              (declare (ignore subwidget))
              ;; (update widget)
@@ -89,7 +133,7 @@
                                                                  :on-switch #'on-switch))))
                  (:h1 :class "text-xl font-bold text-center"
                       "Остальные все сотрудники (их завтра уберём)")
-                
+                 
                  (:div :class "flex flex-col gap-4"
                        (loop for user in (get-all-users)
                              for user-id = (mito:object-id user)
@@ -99,7 +143,8 @@
                              do (render (make-user-switch-widget user ""
                                                                  :on-switch #'on-switch))))))
           (t
-           (:p "Сорян, но тестовая переключалка учёток доступна только залогиновым пользователям.")))))))
+           (:p "Сорян, но тестовая переключалка учёток доступна только залогиновым пользователям.")
+           (:p "Попроси у команды сервиса инвайт-ссылку. Telegram: svetlyak40wt.")))))))
 
 
 (defmethod render ((widget user-switch-widget))
