@@ -133,7 +133,6 @@ CREATE TABLE game (
 
 insert into game (title, widget_name, created_at, updated_at) values ('Запомни имена коллег', 'learn-names', now(), now());
 
-
 -- Знания
 
 CREATE TABLE knowledge (
@@ -157,6 +156,15 @@ CREATE TABLE period_knowledge (
 
 
 -- Структура для логгированию прогресса прохождения онбордингов
+
+CREATE TABLE game_results (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    game_id BIGINT NOT NULL REFERENCES game ON DELETE CASCADE,
+    game_finished_at TIMESTAMPTZ,
+    game_score INTEGER NOT NULL,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
 
 CREATE TABLE board_progress (
     id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -202,6 +210,7 @@ CREATE TABLE period_knowledge_progress (
     period_progress_id BIGINT NOT NULL REFERENCES "period_progress" ON DELETE CASCADE,
     period_knowledge_id BIGINT NOT NULL REFERENCES "period_knowledge" ON DELETE CASCADE,
     questionnaire_results_id BIGINT NOT NULL REFERENCES "questionnaire_results" ON DELETE CASCADE,
+    game_results_id BIGINT REFERENCES "game_results" ON DELETE SET NULL,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );

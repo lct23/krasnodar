@@ -15,6 +15,7 @@
                 #:user-board
                 #:user)
   (:import-from #:app/models/knowledge
+                #:knowledge-game
                 #:knownledge-title
                 #:knowledge-questionnaire
                 #:knowledge)
@@ -48,7 +49,13 @@
   (:import-from #:bordeaux-threads-2
                 #:make-thread)
   (:import-from #:app/emails/welcome
-                #:send-welcome-message))
+                #:send-welcome-message)
+  (:import-from #:app/models/game
+                #:game)
+  (:import-from #:app/models/board-progress
+                #:game-score
+                #:game-finished-at
+                #:game-results))
 (in-package #:app/models/board-progress)
 
 
@@ -106,6 +113,21 @@
   (:metaclass mito:dao-table-class))
 
 
+(defclass game-results ()
+  ((game :col-type game
+         :initarg :game
+         :reader game)
+   (game-finished-at :col-type (or :null :timestamptz)
+                     :initform nil
+                     :accessor game-finished-at)
+   (game-score :col-type :integer
+               :initform 0
+               :accessor game-score
+               :documentation "Процент правильных отвеченных карточек в игре, от 0 до 100%"))
+  (:documentation "Результаты прохождения игры")
+  (:metaclass mito:dao-table-class))
+
+
 (defclass question-response ()
   ((questionnaire-results :col-type questionnaire-results
                           :initarg :questionnaire-results
@@ -136,7 +158,12 @@
    (questionnaire-results :col-type questionnaire-results
                           :initform :questionnaire-results
                           :accessor questionnaire-results
-                          :documentation "Ответы сотрудника на вопросы опросника"))
+                          :documentation "Ответы сотрудника на вопросы опросника")
+   (game-results :col-type (or :null
+                               game-results)
+                 :initform :game-results
+                 :accessor game-results
+                 :documentation "Результаты прохождения игры"))
   (:documentation "Связь между знанием и периодом онбординга")
   (:metaclass mito:dao-table-class))
 
@@ -175,6 +202,11 @@
     ((not (zerop (questionnaire-results-progress
                   (questionnaire-results obj))))
      "Пройдено")
+    ((and (game-results obj)
+          (not (null
+                (game-finished-at
+                 (game-results obj)))))
+     "Пройдено")
     ((timestamp>= (now)
                   (ends-at (period-progress obj)))
      "Просрочено")
@@ -183,8 +215,12 @@
 
 (defun period-knowledge-progress-percent (obj)
   (check-type obj period-knowledge-progress)
-  (questionnaire-results-progress
-   (questionnaire-results obj)))
+  (cond
+    ((game-results obj)
+     (game-score (game-results obj)))
+    (t
+     (questionnaire-results-progress
+      (questionnaire-results obj)))))
 
 
 (defun get-knowledge-progresses (period-progress)
@@ -227,6 +263,15 @@
     qr))
 
 
+(defun make-game-results (period-knowledge)
+  (check-type period-knowledge period-knowledge)
+  (let* ((knowledge (app/models/board::knowledge period-knowledge))
+         (game (knowledge-game knowledge)))
+    (when game
+      (create-dao 'game-results
+                  :game game))))
+
+
 (defun user-progress (user)
   (check-type user (or null user))
   (when user
@@ -264,10 +309,12 @@
                                                 :end-of-the-day t))
                  do (loop for period-knowledge in (period-knowledges period)
                           for questionnaire-results = (make-questionnaire-results period-knowledge)
+                          for game-results = (make-game-results period-knowledge)
                           for pkp = (create-dao 'period-knowledge-progress
                                                 :period-progress pp
                                                 :period-knowledge period-knowledge
-                                                :questionnaire-results questionnaire-results)))
+                                                :questionnaire-results questionnaire-results
+                                                :game-results game-results)))
            (values bp))))))
 
 

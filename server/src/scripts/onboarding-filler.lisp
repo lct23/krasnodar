@@ -3,6 +3,7 @@
   (:import-from #:40ants-pg/transactions
                 #:with-transaction)
   (:import-from #:app/models/board-progress
+                #:game-results
                 #:get-question-possible-answers
                 #:question
                 #:get-question-responses
@@ -56,8 +57,15 @@
         when (timestamp< starts-at now)
         do (loop for knowledge-progress in (get-knowledge-progresses period)
                  for results = (questionnaire-results knowledge-progress)
+                 for game-results = (game-results knowledge-progress)
                  for question-responses = (get-question-responses results)
+                 ;; for game-score = (when game-finished
+                 ;;                    (random 100))
                  for correct-responses = 0
+                 ;; Если есть результаты игры, то не пытаемся заполнять результаты
+                 ;; иначе дашборд может показать что пункт выполнен, хотя мы хотим чтобы
+                 ;; игру всё же прошли
+                 unless game-results
                  do (loop for response in question-responses
                           for question = (question response)
                           for possible-answers = (get-question-possible-answers question)

@@ -33,7 +33,9 @@
                 #:with-html-form)
   (:import-from #:app/widgets/utils
                 #:*green-button-classes*
-                #:submit-button))
+                #:submit-button)
+  (:import-from #:reblocks-ui2/buttons/button
+                #:button))
 (in-package #:app/games/guess-name)
 
 
@@ -62,7 +64,7 @@
             (answer-correct-p obj))))
 
 
-(defwidget guess-name-widget ()
+(defwidget guess-name-widget (event-emitter ui-widget)
   ((cards :initarg :cards
           :accessor cards)
    (failed-cards :initform nil
@@ -137,7 +139,7 @@
     main-widget))
 
 
-(defvar *cards* nil)
+;; (defvar *cards* nil)
 
 (defmethod render ((widget guess-name-widget))
   (let* ((card (first (cards widget))))
@@ -145,8 +147,8 @@
       (:div :class "flex justify-center"
             (cond
               (card
-               (setf *cards*
-                     (list (get-current-user) (cards widget)))
+               ;; (setf *cards*
+               ;;       (list (get-current-user) (cards widget)))
                (render card))
               (t
                (:div :class "flex flex-col gap-8"
@@ -157,7 +159,29 @@
                                 (length (successful-cards widget))))
                      (:div :class "text-center"
                            :style "font-size: 200px"
-                           "🎉"))))))))
+                           "🎉")
+
+                     (let ((game-score (coerce
+                                        (ceiling
+                                         (float
+                                          (/ (* 100 (length
+                                                     (successful-cards widget)))
+                                             (total-cards widget))))
+                                        'integer)))
+                       (:div :class "text-center"
+                             (render (button "Продолжить обучение!"
+                                             :class *green-button-classes*
+                                             :on-click (lambda (&rest rest)
+                                                         (declare (ignore rest))
+                                                         (event-emitter:emit :continue widget
+                                                                             game-score)))))))))))))
+
+
+(defun total-cards (widget)
+  (check-type widget guess-name-widget)
+  (+ (length (successful-cards widget))
+     (length (failed-cards widget))
+     (length (cards widget))))
 
 
 (defun answer-correct-p (widget)
@@ -226,11 +250,32 @@
                                        (:label :for name
                                                :class class
                                                name))))
-                  (:div :class "text-center"
-                   (if (answered widget)
-                       (submit-button :text "Следующая карточка"
-                                      :classes *green-button-classes*)
-                       (submit-button :text "Проверить"))))))))
+                  (:div :class "text-center flex flex-col gap-2"
+                        (let ((num-attempts (num-attempts-left widget)))
+                          (when (and (not (answer-correct-p widget))
+                                     (<= num-attempts (if (answered widget)
+                                                          5
+                                                          4)))
+                            (:div :class "text-gray-500"
+                                  (if (answered widget)
+                                      (case num-attempts
+                                        (5 "Осталось четыре попытки")
+                                        (4 "Осталось три попытки")
+                                        (3 "Осталось две попытки")
+                                        (2 "Осталась последняя попытки")
+                                        (1 "В следующий раз стоит поднапрячься!")
+                                        (0 "Всё пропало!"))
+                                      (case num-attempts
+                                        (5 "Осталось пять попыток")
+                                        (4 "Осталось четыре попытки")
+                                        (3 "Осталось три попытки")
+                                        (2 "Осталось две попытки")
+                                        (1 "Это последняя попытка")
+                                        (0 "Всё пропало!"))))))
+                        (if (answered widget)
+                            (submit-button :text "Следующая карточка"
+                                           :classes *green-button-classes*)
+                            (submit-button :text "Проверить"))))))))
 
 
 (defmethod get-dependencies ((widget guess-name-widget))
