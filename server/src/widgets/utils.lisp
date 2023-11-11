@@ -41,6 +41,11 @@
    focus:outline-none focus:shadow-outline
    disabled:bg-gray-300 disabled:border-gray-400 disabled:ring-0 disabled:scale-100 disabled:shadow-none disabled:text-gray-800")
 
+
+(defparameter *green-button-classes*
+  (replace-all "blue" "green"
+               *button-classes*))
+
 (defparameter *dangerous-button-classes*
   (replace-all "blue-600" "red-600"
                (replace-all "blue-500" "red-500"
