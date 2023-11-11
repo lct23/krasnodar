@@ -193,16 +193,18 @@
       (with-html-form (:post #'switch
                        :class "flex gap-4")
         (if (small widget)
-            (:button :type "submit"
-                     :disabled (not (null current-p))
-                     :class "ml-4"
-                     (:img :style "width: 80px; height: 80px"
-                           :title (fmt "~A - ~A"
-                                       (user-name user)
-                                       (description widget))
-                           :class (if current-p
-                                      "border-4 border-red-500")
-                           :src (user-avatar-url user)))
+            (submit-button :text (description widget)
+                           :disabled current-p)
+            ;; (:button :type "submit"
+            ;;          :disabled (not (null current-p))
+            ;;          :class "ml-4"
+            ;;          (:img :style "width: 80px; height: 80px"
+            ;;                :title (fmt "~A - ~A"
+            ;;                            (user-name user)
+            ;;                            (description widget))
+            ;;                :class (if current-p
+            ;;                           "border-4 border-red-500")
+            ;;                :src (user-avatar-url user)))
             (:img :style "width: 40px; height: 40px"
                   :class (if current-p
                              "border-4 border-red-500")
