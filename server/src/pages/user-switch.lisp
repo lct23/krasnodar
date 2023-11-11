@@ -120,7 +120,7 @@
   (title "Переключалка учёток")
 
   ;; TODO: для прода это надо выставить в NIL
-  (let* ((allow-for-anonymous nil)
+  (let* ((allow-for-anonymous t)
          (code (get-parameter "invite"))
          (secret-code-given-p (and code
                                    (member code *invites*

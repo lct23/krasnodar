@@ -62,7 +62,11 @@
   (:import-from #:app/pages/test-notifications
                 #:make-test-notifications-page)
   (:import-from #:app/pages/notifications
-                #:make-notifications-page))
+                #:make-notifications-page)
+  (:import-from #:app/games/guess-name)
+  (:import-from #:app/games/guess-position)
+  (:import-from #:app/pages/games
+                #:make-test-game-widget))
 (in-package #:app/app)
 
 
@@ -94,6 +98,12 @@
                      (make-notifications-page)))
   ("/playground" (make-page-frame
                   (app/pages/playground::make-playground-widget)))
+  ("/test-game/1" (make-page-frame
+                   (make-test-game-widget "Запомни имена коллег!"
+                                          'app/games/guess-name::make-guess-name-widget)))
+  ("/test-game/2" (make-page-frame
+                   (make-test-game-widget "Угадай должность!"
+                                          'app/games/guess-position::make-guess-position-widget)))
   ("/departments" (make-page-frame
                    (make-departments-list-widget)))
   ("/personal" (make-page-frame

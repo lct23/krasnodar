@@ -26,6 +26,8 @@
                 #:starts-with-p)
   (:import-from #:app/pages/user-switch
                 #:render-switch-for-sidebar)
+  (:import-from #:app/widgets/utils
+                #:redirect-button)
   (:export #:make-page-frame))
 (in-package #:app/widgets/frame)
 
@@ -96,6 +98,17 @@
 (defmethod get-dependencies ((widget frame-widget)))
 
 
+(defun render-game-buttons ()
+  (with-html
+    (let ((classes app/widgets/utils::*green-button-classes*))
+      (:div :class "flex flex-col gap-2 mx-4"
+            (redirect-button "Имена"
+                             "/test-game/1"
+                             :classes classes)
+            (redirect-button "Должности"
+                             "/test-game/2"
+                             :classes classes)))))
+
 (defun render-sidebar ()
   (with-html
     (flet ((item (path title)
@@ -152,7 +165,9 @@
                         (item "/switch" "Переключить учётку"))
                    
                        (title "Тестовые аккаунты")
-                       (render-switch-for-sidebar))
+                       (render-switch-for-sidebar)
+                       (title "Игры")
+                       (render-game-buttons))
                       
                       (t
                        (:ul
