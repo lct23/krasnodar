@@ -160,17 +160,13 @@
                           (item "/boards" "Онбординги")
                           (item "/send-notifications" "Выслать уведомления")))
 
-                       (title "Временные странички")
-                       (:ul
-                        (item "/switch" "Переключить учётку"))
-                   
                        (title "Тестовые аккаунты")
                        (render-switch-for-sidebar)
+                       
                        (title "Игры")
+
                        (render-game-buttons))
                       
                       (t
                        (:ul
-                        (item "/" "Лэндинг")
-                        ;; TODO: временные разделы, убрать для прода!
-                        (item "/switch" "Переключить учётку"))))))))))
+                        (item "/" "Лэндинг"))))))))))

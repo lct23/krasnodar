@@ -113,7 +113,10 @@
                   do (render
                       (make-user-switch-widget user title
                                                :small t
-                                               :on-switch #'on-switch)))))))
+                                               :on-switch #'on-switch)))
+            (:a :class "text-blue-500 text-center"
+                :href "/switch"
+                "Другие учётки")))))
 
 
 (defmethod render ((widget user-switch-page))
