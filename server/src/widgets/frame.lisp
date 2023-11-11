@@ -144,12 +144,12 @@
                          (:ul
                           (item "/departments" "Отделы")
                           (item "/personal" "Сотрудники")
-                          (item "/boards" "Онбординги")))
+                          (item "/boards" "Онбординги")
+                          (item "/send-notifications" "Выслать уведомления")))
 
                        (title "Временные странички")
                        (:ul
-                        (item "/switch" "Переключить учётку")
-                        (item "/test-notifications" "Тест уведомлений"))
+                        (item "/switch" "Переключить учётку"))
                    
                        (title "Тестовые аккаунты")
                        (render-switch-for-sidebar))

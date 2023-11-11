@@ -107,7 +107,7 @@
   ("/learn/\\d+" (make-page-frame
                   (make-learn-page)))
   ;; Временные странички, для демонстрации MVP:
-  ("/test-notifications" (make-page-frame
+  ("/send-notifications" (make-page-frame
                           (make-test-notifications-page)))
   ("/switch" (make-page-frame
               (make-user-switch-page)))

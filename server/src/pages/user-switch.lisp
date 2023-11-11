@@ -97,9 +97,9 @@
 
 
 (defparameter *users-to-show*
-  '((32 "Сотрудник HR")
-    (22 "Ментор")
-    (23 "Новый сотрудник")))
+  '((32 "HR менеджер")
+    (23 "Cотрудник")
+    (22 "Ментор")))
 
 
 (defun render-switch-for-sidebar ()
@@ -194,6 +194,9 @@
                        :class "flex gap-4")
         (if (small widget)
             (submit-button :text (description widget)
+                           :classes (concatenate 'string
+                                                 *button-classes*
+                                                 " w-full")
                            :disabled current-p)
             ;; (:button :type "submit"
             ;;          :disabled (not (null current-p))
