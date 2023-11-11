@@ -37,29 +37,9 @@ COPY . /app
 RUN qlot install
 RUN qlot exec ros run --load load-all.lisp --quit
 
-ENV CL_SOURCE_REGISTRY=/app/bundle//:/app/admin/:/app/common/:/app/events/:/app/image-store/:/app/passport/:/app/rating/
+ENV CL_SOURCE_REGISTRY=/app/bundle//:/app/server/:/app/common/
 
 
-FROM base as passport
-RUN qlot exec ros build passport/roswell/passport.ros
-CMD /app/passport/roswell/passport
-
-
-FROM base as events
-RUN qlot exec ros build events/roswell/events.ros
-CMD /app/events/roswell/events
-
-
-FROM base as rating
-RUN qlot exec ros build rating/roswell/rating.ros
-CMD /app/rating/roswell/rating
-
-
-FROM base as image-store
-RUN qlot exec ros build image-store/roswell/image-store.ros
-CMD /app/image-store/roswell/image-store
-
-
-FROM base as admin
-RUN qlot exec ros build admin/roswell/admin.ros
-CMD /app/admin/roswell/admin
+FROM base as server
+RUN qlot exec ros build server/roswell/server.ros
+CMD /app/server/roswell/server
