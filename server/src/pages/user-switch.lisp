@@ -132,12 +132,11 @@
     (when secret-code-given-p
       (log-invite-usage code)
       
-      (unless (get-current-user)
-        (reblocks/session:reset)
-        ;; Залогиним как HR и редиректнем на /
-        (setf (get-current-user)
-              (get-user 32))
-        (redirect "/")))
+      (reblocks/session:reset)
+      ;; Залогиним как HR и редиректнем на /
+      (setf (get-current-user)
+            (get-user 32))
+      (redirect "/"))
     
     (flet ((on-switch (subwidget)
              (declare (ignore subwidget))
